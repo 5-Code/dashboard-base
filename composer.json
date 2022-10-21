@@ -1,0 +1,56 @@
+{
+    "name": "mohamedhabibwork/dashboard",
+    "description": "base dashboard",
+    "type": "library",
+    "license": "MIT",
+    "prefer-stable": true,
+    "keywords": [
+        "dashboard",
+        "laravel",
+        "laravel-dashboard"
+    ],
+    "support": {
+        "email": "mohamedhabibwork@gmail.com"
+    },
+    "autoload": {
+        "psr-4": {
+            "Habib\\Dashboard\\": "src/"
+        },
+        "files": [
+            "helpers/main.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "mohamedhabibwork",
+            "email": "64292519+mohamedhabibwork@users.noreply.github.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.1",
+        "barryvdh/laravel-translation-manager": "*",
+        "laravelcollective/html": "^6",
+        "tanmuhittin/laravel-google-translate": "*",
+        "realrashid/sweet-alert": "^5",
+        "doctrine/dbal": "*",
+        "intervention/image": "dev-master",
+        "stevebauman/location": "^6",
+        "ext-fileinfo": "*"
+    },
+    "require-dev": {
+        "barryvdh/laravel-debugbar": "*",
+        "laravel/telescope": "*"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Habib\\Dashboard\\Providers\\DashboardServiceProvider"
+            ]
+        }
+    },
+    "version": "dev-main"
+}
