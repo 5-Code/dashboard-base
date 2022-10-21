@@ -34,11 +34,9 @@
         "tanmuhittin/laravel-google-translate": "*",
         "realrashid/sweet-alert": "^5",
         "doctrine/dbal": "*",
-        "intervention/image": "dev-master",
+        "intervention/image": "^3.0.0-alpha.5",
         "stevebauman/location": "^6",
-        "ext-fileinfo": "*"
-    },
-    "require-dev": {
+        "ext-fileinfo": "*",
         "barryvdh/laravel-debugbar": "*",
         "laravel/telescope": "*"
     },

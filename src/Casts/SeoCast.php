@@ -6,11 +6,25 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
 class SeoCast implements CastsAttributes
 {
+    /**
+     * @param $model
+     * @param $key
+     * @param $value
+     * @param $attributes
+     * @return mixed
+     */
     public function get($model, $key, $value, $attributes)
     {
         return json_decode($value, true);
     }
 
+    /**
+     * @param $model
+     * @param $key
+     * @param $value
+     * @param $attributes
+     * @return false|mixed|string
+     */
     public function set($model, $key, $value, $attributes)
     {
         $value = array_merge($value ?? [], [

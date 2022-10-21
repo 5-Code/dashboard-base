@@ -3,12 +3,8 @@
 namespace Habib\Dashboard\Http\Requests;
 
 use Exception;
-
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Stevebauman\Location\Facades\Location;
-use Symfony\Component\HttpFoundation\File\File as FileFromUrl;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 trait RequestMethods
 {
@@ -28,9 +24,11 @@ trait RequestMethods
      */
     public function removeNullFromRequest(): void
     {
-        foreach ($this->forgetIfNull ?? [] as $item)
-            if ($this->has($item) && (blank($this->get($item)) || is_null($this->get($item))))
+        foreach ($this->forgetIfNull ?? [] as $item) {
+            if ($this->has($item) && (blank($this->get($item)) || is_null($this->get($item)))) {
                 $this->request->remove($item);
+            }
+        }
     }
 
     /**
@@ -72,11 +70,15 @@ trait RequestMethods
     public function filesUpload(&$validated): void
     {
         foreach ($this->filesKeys ?? [] as $key) {
-            if (!$this->hasFile($key)) continue;
+            if (!$this->hasFile($key)) {
+                continue;
+            }
 
             if (is_array($this->get($key))) {
                 $files = [];
-                foreach ($this->get($key) as $file) $files[] = uploader($file);
+                foreach ($this->get($key) as $file) {
+                    $files[] = uploader($file);
+                }
                 $validated[$key] = $files;
             } elseif ($this->hasFile($key)) {
                 $validated[$key] = uploader($this->file($key));
@@ -87,38 +89,58 @@ trait RequestMethods
 
     public function encryption(&$validated): void
     {
-        if (!property_exists($this, 'encryption')) return;
+        if (!property_exists($this, 'encryption')) {
+            return;
+        }
 
         foreach ($this->encryption as $encoding) {
             $value = Arr::get($validated, $encoding);
-            if (isset($value))
+            if (isset($value)) {
                 Arr::set($validated, $encoding, bcrypt($value));
+            }
         }
     }
 
     public function getCurrentRequestIp()
     {
         $ipaddress = '';
-        if (isset($_SERVER["HTTP_CF_CONNECTING_IP"]))
+        if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
             $ipaddress = $_SERVER["HTTP_CF_CONNECTING_IP"];
-        else if (isset($_SERVER['REMOTE_ADDR']))
-            $ipaddress = $_SERVER['REMOTE_ADDR'];
-        else if (isset($_SERVER['HTTP_CLIENT_IP']))
-            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-        else if (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        else if (isset($_SERVER['HTTP_X_FORWARDED']))
-            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-        else if (isset($_SERVER['HTTP_FORWARDED_FOR']))
-            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-        else if (isset($_SERVER['HTTP_FORWARDED']))
-            $ipaddress = $_SERVER['HTTP_FORWARDED'];
-        else if (isset($_SERVER['REMOTE_ADDR']))
-            $ipaddress = $_SERVER['REMOTE_ADDR'];
-        else if ($this->ip() != null)
-            $ipaddress = $this->ip();
-        else
-            $ipaddress = 'UNKNOWN';
+        } else {
+            if (isset($_SERVER['REMOTE_ADDR'])) {
+                $ipaddress = $_SERVER['REMOTE_ADDR'];
+            } else {
+                if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+                    $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+                } else {
+                    if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+                    } else {
+                        if (isset($_SERVER['HTTP_X_FORWARDED'])) {
+                            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+                        } else {
+                            if (isset($_SERVER['HTTP_FORWARDED_FOR'])) {
+                                $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+                            } else {
+                                if (isset($_SERVER['HTTP_FORWARDED'])) {
+                                    $ipaddress = $_SERVER['HTTP_FORWARDED'];
+                                } else {
+                                    if (isset($_SERVER['REMOTE_ADDR'])) {
+                                        $ipaddress = $_SERVER['REMOTE_ADDR'];
+                                    } else {
+                                        if ($this->ip() != null) {
+                                            $ipaddress = $this->ip();
+                                        } else {
+                                            $ipaddress = 'UNKNOWN';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return $ipaddress;
     }
 
@@ -202,11 +224,13 @@ trait RequestMethods
         $tablet_browser = 0;
         $mobile_browser = 0;
 
-        if (preg_match('/(tablet|ipad|playbook)|(android(?!.*(mobi|opera mini)))/i', strtolower($this->getCurrentUserAgent()))) {
+        if (preg_match('/(tablet|ipad|playbook)|(android(?!.*(mobi|opera mini)))/i',
+            strtolower($this->getCurrentUserAgent()))) {
             $tablet_browser++;
         }
 
-        if (preg_match('/(up.browser|up.link|mmp|symbian|smartphone|midp|wap|phone|android|iemobile)/i', strtolower($this->getCurrentUserAgent()))) {
+        if (preg_match('/(up.browser|up.link|mmp|symbian|smartphone|midp|wap|phone|android|iemobile)/i',
+            strtolower($this->getCurrentUserAgent()))) {
             $mobile_browser++;
         }
 
@@ -219,13 +243,94 @@ trait RequestMethods
 
         $mobile_ua = strtolower(substr($this->getCurrentUserAgent(), 0, 4));
         $mobile_agents = array(
-            'w3c', 'acs-', 'alav', 'alca', 'amoi', 'audi', 'avan', 'benq', 'bird', 'blac', 'blaz', 'brew', 'cell', 'cldc', 'cmd-', 'dang', 'doco', 'eric', 'hipt', 'inno',
-            'ipaq', 'java', 'jigs', 'kddi', 'keji', 'leno', 'lg-c', 'lg-d', 'lg-g', 'lge-', 'maui', 'maxo', 'midp', 'mits', 'mmef', 'mobi', 'mot-', 'moto', 'mwbp', 'nec-',
+            'w3c',
+            'acs-',
+            'alav',
+            'alca',
+            'amoi',
+            'audi',
+            'avan',
+            'benq',
+            'bird',
+            'blac',
+            'blaz',
+            'brew',
+            'cell',
+            'cldc',
+            'cmd-',
+            'dang',
+            'doco',
+            'eric',
+            'hipt',
+            'inno',
+            'ipaq',
+            'java',
+            'jigs',
+            'kddi',
+            'keji',
+            'leno',
+            'lg-c',
+            'lg-d',
+            'lg-g',
+            'lge-',
+            'maui',
+            'maxo',
+            'midp',
+            'mits',
+            'mmef',
+            'mobi',
+            'mot-',
+            'moto',
+            'mwbp',
+            'nec-',
 
-            'newt', 'noki', 'palm', 'pana', 'pant', 'phil', 'play', 'port', 'prox', 'qwap', 'sage', 'sams', 'sany', 'sch-', 'sec-', 'send', 'seri', 'sgh-', 'shar',
+            'newt',
+            'noki',
+            'palm',
+            'pana',
+            'pant',
+            'phil',
+            'play',
+            'port',
+            'prox',
+            'qwap',
+            'sage',
+            'sams',
+            'sany',
+            'sch-',
+            'sec-',
+            'send',
+            'seri',
+            'sgh-',
+            'shar',
 
-            'sie-', 'siem', 'smal', 'smar', 'sony', 'sph-', 'symb', 't-mo', 'teli', 'tim-', 'tosh', 'tsm-', 'upg1', 'upsi', 'vk-v', 'voda', 'wap-', 'wapa', 'wapi', 'wapp',
-            'wapr', 'webc', 'winw', 'winw', 'xda', 'xda-');
+            'sie-',
+            'siem',
+            'smal',
+            'smar',
+            'sony',
+            'sph-',
+            'symb',
+            't-mo',
+            'teli',
+            'tim-',
+            'tosh',
+            'tsm-',
+            'upg1',
+            'upsi',
+            'vk-v',
+            'voda',
+            'wap-',
+            'wapa',
+            'wapi',
+            'wapp',
+            'wapr',
+            'webc',
+            'winw',
+            'winw',
+            'xda',
+            'xda-'
+        );
 
         if (in_array($mobile_ua, $mobile_agents)) {
             $mobile_browser++;
@@ -246,12 +351,14 @@ trait RequestMethods
         if ($tablet_browser > 0) {
             //do something for tablet devices
             return 'tablet';
-        } else if ($mobile_browser > 0) {
-            //do something for mobile devices
-            return 'mobile';
         } else {
-            //do something for everything else
-            return 'computer';
+            if ($mobile_browser > 0) {
+                //do something for mobile devices
+                return 'mobile';
+            } else {
+                //do something for everything else
+                return 'computer';
+            }
         }
     }
 

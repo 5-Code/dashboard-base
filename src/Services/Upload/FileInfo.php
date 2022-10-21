@@ -2,21 +2,24 @@
 
 namespace Habib\Dashboard\Services\Upload;
 
+use File;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Image;
+use Intervention\Image\ImageManager;
 
-class File implements Arrayable
+class FileInfo implements Arrayable
 {
     public function __construct(
-        private string      $name,
-        private string      $originalName,
-        private string      $mime,
-        private string      $path,
-        private string      $disk,
-        private string      $hash,
-        private int         $size,
+        private string $name,
+        private string $originalName,
+        private string $mime,
+        private string $path,
+        private string $disk,
+        private string $hash,
+        private int $size,
         private null|string $collection = null,
-    )
-    {
+    ) {
     }
 
     public function toArray(): array
@@ -97,4 +100,15 @@ class File implements Arrayable
         return $this->collection ?? 'default';
     }
 
+    /**
+     * @return Image
+     */
+    public function image(): Image
+    {
+        $file = File::get(
+            Storage::disk($this->getDisk())->path($this->getPath() . DIRECTORY_SEPARATOR . $this->getName())
+        );
+
+        return (new ImageManager('imagick'))->make($file);
+    }
 }

@@ -6,7 +6,7 @@ namespace Habib\Dashboard\Models\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 
-trait StatusTrait
+trait ActiveTrait
 {
     /**
      * @param Builder $builder
@@ -14,7 +14,7 @@ trait StatusTrait
      */
     public function scopeActive(Builder $builder)
     {
-        return $builder->where($this->getTable() . '.status', true);
+        return $builder->where($this->getTable() . '.active', true);
     }
 
     /**
@@ -23,7 +23,7 @@ trait StatusTrait
      */
     public function scopeNotActive(Builder $builder)
     {
-        return $builder->where($this->getTable() . '.status', false);
+        return $builder->where($this->getTable() . '.active', false);
     }
 
     /**
@@ -31,7 +31,7 @@ trait StatusTrait
      */
     public function isActive(): bool
     {
-        return !!$this->status;
+        return !!$this->active;
     }
 
     /**
@@ -39,6 +39,6 @@ trait StatusTrait
      */
     public function isNotActive(): bool
     {
-        return !$this->status;
+        return !$this->active;
     }
 }

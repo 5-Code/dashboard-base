@@ -2,12 +2,11 @@
 
 namespace Habib\Dashboard\Services\Upload;
 
-use Habib\Dashboard\Services\Upload\File as FileTemplate;
-
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use Intervention\Image\Image;
 use Symfony\Component\HttpFoundation\File\File as FileFromUrl;
 
 class UploadService implements UploadServiceContract
@@ -23,11 +22,13 @@ class UploadService implements UploadServiceContract
      * @param $path
      * @param $width
      * @param $height
-     * @param $type
+     * @param string $type
      * @return string
      */
-    public static function thumb($path, $width = null, $height = null, $type = "fit"): string
+    public static function thumb($path, $width = null, $height = null, string $type = "fit"): string
     {
+        //relative directory path starting from main directory of images
+        $dir_path = (dirname($path) == '.') ? "" : dirname($path);
         $thumb_images_path = config('dashboard.thumb_images_path', 'thumbs');
         $images_path = config('dashboard.images_path', '');
         $path = ltrim($path, "/");
@@ -65,38 +66,38 @@ class UploadService implements UploadServiceContract
 
         $image = Image::make(public_path("{$images_path}/" . $path));
 
-        switch ($type) {
-            case "fit":
-            {
-                $image->fit($width, $height, function ($constraint) {
-                });
-                break;
-            }
-            case "resize":
-            {
-                //stretched
-                $image->resize($width, $height);
-            }
-            case "background":
-            {
-                $image->resize($width, $height, function ($constraint) {
-                    //keeps aspect ratio and sets black background
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                });
-            }
-            case "resizeCanvas":
-            {
-                $image->resizeCanvas($width, $height, 'center', false, 'rgba(0, 0, 0, 0)'); //gets the center part
-            }
-        }
+        match ($type) {
+            'fit' => $image->fit($width, $height),
+            'resize' => $image->resize($width, $height),
+            'resizeCanvas' => $image->resizeCanvas($width, $height, 'center', false, 'rgba(0, 0, 0, 0)'),
+            'background' => $image->resize($width, $height, function ($constraint) {
+                //keeps aspect ratio and sets black background
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            }),
+            'webp' => $image->fit($width, $height)->encode('webp'),
+            'webpBackground' => $image->resize($width, $height, function ($constraint) {
+                //keeps aspect ratio and sets black background
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->encode('webp'),
+            'webpResize' => $image->resize($width, $height)->encode('webp'),
+            'webpResizeCanvas' => $image->resizeCanvas($width, $height, 'center', false,
+                'rgba(0, 0, 0, 0)')->encode('webp'),
+            'gif' => $image->fit($width, $height)->encode('gif'),
+            'png' => $image->fit($width, $height)->encode('png'),
+            'jpg' => $image->fit($width, $height)->encode('jpg'),
+        };
 
-        //relative directory path starting from main directory of images
-        $dir_path = (dirname($path) == '.') ? "" : dirname($path);
 
         //Create the directory if it doesn't exist
-        if (!File::exists(public_path("{$images_path}/$thumb_images_path/" . "{$width}x{$height}_{$type}/" . $dir_path))) {
-            File::makeDirectory(public_path("{$images_path}/$thumb_images_path/" . "{$width}x{$height}_{$type}/" . $dir_path), 0775, true);
+        if (!File::exists(
+            public_path("$images_path/$thumb_images_path/{$width}x{$height}_{$type}/" . $dir_path))) {
+            File::makeDirectory(
+                public_path("$images_path/$thumb_images_path/{$width}x{$height}_{$type}/" . $dir_path),
+                0775,
+                true
+            );
         }
 
         //Save the thumbnail
@@ -110,10 +111,13 @@ class UploadService implements UploadServiceContract
      * @param UploadedFile $file
      * @param string|null $collection
      * @param array $options
-     * @return \Habib\Dashboard\Services\Upload\File
+     * @return FileInfo
      */
-    public function avatar(UploadedFile $file, ?string $collection = null, array $options = []): \Habib\Dashboard\Services\Upload\File
-    {
+    public function avatar(
+        UploadedFile $file,
+        ?string $collection = null,
+        array $options = []
+    ): FileInfo {
         $options = [
             'name' => $file->hashName(),
             'disk' => $options['disk'] ?? 'public',
@@ -127,10 +131,13 @@ class UploadService implements UploadServiceContract
      * @param UploadedFile $file
      * @param string|null $collection
      * @param array $options
-     * @return \Habib\Dashboard\Services\Upload\File
+     * @return FileInfo
      */
-    public function upload(UploadedFile $file, null|string $collection = null, array $options = []): \Habib\Dashboard\Services\Upload\File
-    {
+    public function upload(
+        UploadedFile $file,
+        null|string $collection = null,
+        array $options = []
+    ): FileInfo {
         $name = $options['name'] ?? $file->hashName();
         $disk = $options['disk'] ?? config('filesystems.default', 'public');
         $baseDir = $options['dir'] ?? $collection ?? config('app.base_file_upload', 'files');
@@ -145,7 +152,7 @@ class UploadService implements UploadServiceContract
         $mime = $file->getMimeType();
         $originalName = $file->getClientOriginalName();
 
-        return new FileTemplate(
+        return new FileInfo(
             name: $name,
             originalName: $originalName,
             mime: $mime,
@@ -182,10 +189,13 @@ class UploadService implements UploadServiceContract
      * @param string $keyName
      * @param string|null $collection
      * @param array $options
-     * @return \Habib\Dashboard\Services\Upload\File
+     * @return FileInfo
      */
-    public function uploadFormRequest(string $keyName, null|string $collection = null, array $options = []): \Habib\Dashboard\Services\Upload\File
-    {
+    public function uploadFormRequest(
+        string $keyName,
+        null|string $collection = null,
+        array $options = []
+    ): FileInfo {
         return $this->upload(request()->file($keyName), $collection, $options);
     }
 
@@ -193,10 +203,13 @@ class UploadService implements UploadServiceContract
      * @param string $file
      * @param string|null $collection
      * @param array $options
-     * @return \Habib\Dashboard\Services\Upload\File
+     * @return FileInfo
      */
-    public function uploadBase64(string $file, null|string $collection = null, array $options = []): \Habib\Dashboard\Services\Upload\File
-    {
+    public function uploadBase64(
+        string $file,
+        null|string $collection = null,
+        array $options = []
+    ): FileInfo {
         return $this->upload($this->base64ToFile($file), $collection, $options);
     }
 
@@ -229,6 +242,20 @@ class UploadService implements UploadServiceContract
             0,
             true // Mark it as test, since the file isn't from real HTTP POST.
         );
+    }
+
+    /**
+     * @param FileInfo $fileInfo
+     * @return Image
+     */
+    public function toWebp(FileInfo $fileInfo): Image
+    {
+        return $fileInfo->image()
+            ->encode('webp')
+            ->save($fileInfo->getPath() . DIRECTORY_SEPARATOR . 'webp' . DIRECTORY_SEPARATOR . $fileInfo->getName(), 85,
+                'webp'
+            );
+
     }
 //    /**
 //     * @param array $options

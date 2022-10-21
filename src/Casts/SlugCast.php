@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class SlugCast implements CastsAttributes
 {
-    public function __construct(private string $name = 'name'){}
+    public function __construct(private string $name = 'name')
+    {
+    }
 
     /**
      * @param Model $model

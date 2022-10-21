@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Form;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
@@ -56,13 +57,13 @@ class Setting extends Model
     public function getInputHtml(array $options = [])
     {
         return match ($this->type) {
-            'text' => \Form::textarea('name', $this->value, array_merge(['class' => 'form-control'], $options)),
-            'email' => \Form::email('name', $this->value, array_merge(['class' => 'form-control'], $options)),
-            'phone' => \Form::tel('name', $this->value, array_merge(['class' => 'form-control'], $options)),
-            'url' => \Form::url('name', $this->value, array_merge(['class' => 'form-control'], $options)),
-            'number' => \Form::number('name', $this->value, array_merge(['class' => 'form-control'], $options)),
-            'file', 'video', 'image' => \Form::file('name', array_merge(['class' => 'form-control'], $options)),
-            default => \Form::text('name', $this->value, array_merge(['class' => 'form-control'], $options)),
+            'text' => Form::textarea('name', $this->value, array_merge(['class' => 'form-control'], $options)),
+            'email' => Form::email('name', $this->value, array_merge(['class' => 'form-control'], $options)),
+            'phone' => Form::tel('name', $this->value, array_merge(['class' => 'form-control'], $options)),
+            'url' => Form::url('name', $this->value, array_merge(['class' => 'form-control'], $options)),
+            'number' => Form::number('name', $this->value, array_merge(['class' => 'form-control'], $options)),
+            'file', 'video', 'image' => Form::file('name', array_merge(['class' => 'form-control'], $options)),
+            default => Form::text('name', $this->value, array_merge(['class' => 'form-control'], $options)),
         };
     }
 }

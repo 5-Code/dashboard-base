@@ -20,7 +20,9 @@ class PointCast implements CastsAttributes
 
     public function set($model, $key, $value, $attributes)
     {
-        if (blank($value)) return null;
+        if (blank($value)) {
+            return null;
+        }
 
         if (is_array($value)) {
             if (isset($value['lat']) && isset($value['lng'])) {

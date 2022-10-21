@@ -11,17 +11,17 @@ interface UploadServiceContract
      * @param UploadedFile $file
      * @param string|null $collection
      * @param array $options
-     * @return File
+     * @return FileInfo
      */
-    public function upload(UploadedFile $file, null|string $collection = null, array $options = []): File;
+    public function upload(UploadedFile $file, null|string $collection = null, array $options = []): FileInfo;
 
     /**
      * @param UploadedFile $file
      * @param string|null $collection
      * @param array $options
-     * @return File
+     * @return FileInfo
      */
-    public function avatar(UploadedFile $file, ?string $collection = null, array $options = []): File;
+    public function avatar(UploadedFile $file, ?string $collection = null, array $options = []): FileInfo;
 
     /**
      * @param array $files
@@ -35,9 +35,9 @@ interface UploadServiceContract
      * @param string $file
      * @param string|null $collection
      * @param array $options
-     * @return File
+     * @return FileInfo
      */
-    public function uploadBase64(string $file, null|string $collection = null, array $options = []): File;
+    public function uploadBase64(string $file, null|string $collection = null, array $options = []): FileInfo;
 
     /**
      * @param string $file

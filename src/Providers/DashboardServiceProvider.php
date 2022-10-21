@@ -56,6 +56,17 @@ class DashboardServiceProvider extends ServiceProvider
         Blueprint::macro('slugJson', function ($name = 'slug') {
             return $this->jsonb($name);
         });
+        Blueprint::macro('seo', function ($name = 'seo') {
+            return $this->jsonb($name);
+        });
+
+        Blueprint::macro('status', function ($name = 'status') {
+            return $this->boolean($name);
+        });
+
+        Blueprint::macro('active', function ($name = 'active') {
+            return $this->boolean($name);
+        });
 
 
         Blueprint::macro('lang', function ($columnName, $locales = [], $unique = false): ColumnDefinition {
@@ -70,7 +81,9 @@ class DashboardServiceProvider extends ServiceProvider
                     ->comment("this is $columnName with locale : $locale")
 //                    ->index()
                     ->fulltext();
-                if ($unique) $localeColumn->unique();
+                if ($unique) {
+                    $localeColumn->unique();
+                }
             });
             return $column;
         });

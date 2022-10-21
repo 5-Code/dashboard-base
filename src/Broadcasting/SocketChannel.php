@@ -17,12 +17,17 @@ class SocketChannel
     {
         $to = $notifiable?->routeNotificationFor('socket', $notification);
 
-        if (blank($to)) return;
+        if (blank($to)) {
+            return;
+        }
 
         $message = $notification->toSocket($notifiable);
         $message['channels'][] = $to;
         $message['channels'] = array_unique($message['channels']);
-        if (!$url = method_exists($notification, 'socketUrl') ? $notification->socketUrl($notifiable, $notification) : config('dashboard.socket_url')) return;
+        if (!$url = method_exists($notification, 'socketUrl') ? $notification->socketUrl($notifiable,
+            $notification) : config('dashboard.socket_url')) {
+            return;
+        }
         $response = Http::acceptJson()->withoutVerifying()->asJson()->post($url, $message);
         logger()->info("SocketChannel: {$url} => {$response->getStatusCode()}", $response->json());
         return $response;
