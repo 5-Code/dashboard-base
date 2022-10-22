@@ -1,6 +1,8 @@
 <?php
 
-class HelperDashboard
+namespace App\Helpers;
+
+class Helper
 {
 
 }
