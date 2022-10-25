@@ -2,10 +2,11 @@
 
 namespace Habib\Dashboard\Actions\Blog;
 
-use Habib\Dashboard\Helpers\Slugger;
 use Habib\Dashboard\Actions\ActionInterface;
+use Habib\Dashboard\Events\Blog\BlogUpdatedEvent;
+use Habib\Dashboard\Events\Blog\BlogUpdatingEvent;
 use Habib\Dashboard\Models\Blog;
-use Habib\Dashboard\Services\Upload\UploadService;
+use Illuminate\Support\Facades\DB;
 
 class UpdateBlogAction implements ActionInterface
 {
@@ -19,23 +20,27 @@ class UpdateBlogAction implements ActionInterface
      */
     public function handle(array $data)
     {
-        if (isset($data['image'])) {
-            $image = UploadService::new()->upload($data['image'], 'blogs');
-            $data['image'] = $image->getPath();
-        }
-        $this->model->fill($data);
-        if (!$this->model->isDirty('title')) {
-            $slug = [];
-            foreach (locals() as $local) {
-                $slug[$local] = Slugger::new()->slug($this->model, "slug->{$local}", $data['title'][$local]);
+        return DB::transaction(function () use ($data) {
+
+            if (isset($data['image'])) {
+                $image = $this->model->upload($data['image'], 'blogs', [
+                    'dir' => 'blogs',
+                ]);
+                $data['image_id'] = $image->id;
             }
-            $this->model->setAttribute('slug', $slug);
-        }
 
-        if (!$this->model->save()) {
-            return false;
-        }
+            $this->model->fill($data);
 
-        return $this->model;
+            if (!$this->model->isDirty('title')) {
+                $this->model->sluggerByLocals($data, 'title', 'slug');
+            }
+
+            event(new BlogUpdatingEvent($this->model));
+
+            if (!$this->model->save()) {
+                return false;
+            }
+            return $this->model->tap(fn($model) => event(new BlogUpdatedEvent($model)));
+        });
     }
 }

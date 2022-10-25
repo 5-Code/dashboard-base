@@ -3,16 +3,19 @@
 namespace Habib\Dashboard\Models;
 
 use Habib\Dashboard\Casts\JsonCast;
-use Habib\Dashboard\Models\Traits\ContactableTrait;
 use Habib\Dashboard\Models\Traits\HasOwner;
 use Habib\Dashboard\Models\Traits\HasSlug;
 use Habib\Dashboard\Models\Traits\MediaImageTrait;
+use Habib\Dashboard\Models\Traits\MediaModelsTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Blog extends Model
 {
-    use HasOwner, MediaImageTrait, HasSlug;
+    use HasOwner, HasSlug;
+    use MediaImageTrait{
+        MediaImageTrait::attachMedia as attachMediaImage;
+    }
 
     protected $fillable = [
         'title',
@@ -36,5 +39,4 @@ class Blog extends Model
     {
         return $this->morphTo();
     }
-
 }

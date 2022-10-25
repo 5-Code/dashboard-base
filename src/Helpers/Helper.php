@@ -20,7 +20,7 @@ class Helper
      * @param Request $request
      * @return Visitor
      */
-    public function visitor(Request $request): Visitor
+    public static function visitor(Request $request): Visitor
     {
         $reqClient = RequestClient::new();
 
@@ -42,6 +42,4 @@ class Helper
     {
         return Visitor::where('ip', $request->ip())->first();
     }
-
-    // features
 }

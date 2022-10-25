@@ -15,6 +15,7 @@
     "autoload": {
         "psr-4": {
             "Habib\\Dashboard\\": "src/",
+            "Habib\\Dashboard\\Database\\Factories\\": "database/factories",
             "Habib\\Dashboard\\Test\\": "tests/"
         },
         "files": [

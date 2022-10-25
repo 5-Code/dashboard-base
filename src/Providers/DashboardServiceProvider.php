@@ -6,8 +6,6 @@ use Closure;
 use Form;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\ColumnDefinition;
-use Illuminate\Database\Schema\Grammars\MySqlGrammar;
-use Illuminate\Database\Schema\Grammars\PostgresGrammar;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,7 +18,10 @@ class DashboardServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $dirname = dirname(dirname(__DIR__));
+        $this->mergeConfigFrom($dirname . '/config/dashboard.php', 'dashboard');
+        $this->mergeConfigFrom($dirname . '/config/fcm.php', 'fcm');
+
     }
 
     /**
@@ -30,6 +31,28 @@ class DashboardServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $dirname = dirname(dirname(__DIR__));
+        if ($this->app->runningInConsole()) {
+
+            $this->publishes([
+                $dirname . '/config/dashboard.php' => config_path('dashboard.php'),
+                $dirname . '/config/fcm.php' => config_path('fcm.php'),
+            ], 'config');
+            $this->publishes([
+                $dirname . '/database/migrations/2020_08_04_195229_create_settings_table.php' => database_path('migrations/2020_08_04_195229_create_settings_table.php'),
+                $dirname . '/database/migrations/2022_10_19_120020_create_media_table.php' => database_path('migrations/2022_10_19_120020_create_media_table.php'),
+                $dirname . '/database/migrations/2022_10_22_181058_create_faqs_table.php' => database_path('migrations/2022_10_22_181058_create_faqs_table.php'),
+                $dirname . '/database/migrations/2022_10_22_202218_create_blogs_table.php' => database_path('migrations/2022_10_22_202218_create_blogs_table.php'),
+                $dirname . '/database/migrations/2022_10_22_213058_create_contacts_table.php' => database_path('migrations/2022_10_22_213058_create_contacts_table.php'),
+                $dirname . '/database/migrations/2022_10_22_223023_create_tickets_table.php' => database_path('migrations/2022_10_22_223023_create_tickets_table.php'),
+                $dirname . '/database/migrations/2022_10_22_223347_create_ticket_messages_table.php' => database_path('migrations/2022_10_22_223347_create_ticket_messages_table.php'),
+                $dirname . '/database/migrations/2022_10_23_000115_create_visitors_table.php' => database_path('migrations/2022_10_23_000115_create_visitors_table.php'),
+            ], 'migrations');
+
+        }
+
+        $this->loadMigrationsFrom($dirname . '/database/migrations');
+
         Http::macro('getIp', function (string $ip) {
             return Http::get("http://www.geoplugin.net/json.gp?ip={$ip}")->body();
         });

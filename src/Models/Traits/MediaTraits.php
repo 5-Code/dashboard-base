@@ -4,9 +4,29 @@ namespace Habib\Dashboard\Models\Traits;
 
 use Habib\Dashboard\Models\Media;
 use Habib\Dashboard\Services\Upload\FileInfo;
+use Habib\Dashboard\Services\Upload\UploadService;
+use Illuminate\Http\UploadedFile;
 
 trait MediaTraits
 {
+
+    public function upload(UploadedFile $file, string $collections = null, array $options = []): Media
+    {
+        $options['dir'] ??= str($this->getTable())->pluralize()->snake()->toString();
+        $image = UploadService::new()->upload($file, $collections ?? $options['dir'], $options);
+        return $this->addMedia($image);
+    }
+
+    /**
+     * @param FileInfo $fileInfo
+     * @return Media|bool
+     */
+    public function addMedia(FileInfo $fileInfo): Media|bool
+    {
+        $attributes = $this->parseMediaInfo($fileInfo);
+
+        return $this->attachMedia(new Media($attributes));
+    }
 
     /**
      * @param FileInfo $fileInfo
@@ -35,14 +55,8 @@ trait MediaTraits
     }
 
     /**
-     * @param FileInfo $fileInfo
-     * @return Model|bool
+     * @param Media $media
+     * @return Media|bool
      */
-    public function addMedia(FileInfo $fileInfo): Model|bool
-    {
-        $attributes = $this->parseMediaInfo($fileInfo);
-
-        return $this->attachMedia(new Media($attributes));
-    }
-
+    abstract public function attachMedia(Media $media): Media|bool;
 }

@@ -21,7 +21,9 @@ class CreateNewBlogAction implements ActionInterface
         return DB::transaction(function () {
             $data['owner_id'] = auth()->id();
             $data['owner_type'] = auth()->user()->getMorphClass();
-            $image = UploadService::new()->upload($data['image'], 'blogs');
+            $image = UploadService::new()->upload($data['image'], 'blogs', [
+                'dir' => 'blogs',
+            ]);
             $model = new Blog($data);
             $image = Media::create($model->parseMediaInfo($image));
             $model->image_id = $image->id;
@@ -31,8 +33,10 @@ class CreateNewBlogAction implements ActionInterface
             if (!$model->save()) {
                 return false;
             }
+
             $image->model()->associate($model);
-            return tap($model, fn($model) => event(new BlogCreatedEvent($model)));
+
+            return $model->tap(fn($model) => event(new BlogCreatedEvent($model)));
         });
     }
 }
