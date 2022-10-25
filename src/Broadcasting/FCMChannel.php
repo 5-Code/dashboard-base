@@ -25,29 +25,34 @@ class FCMChannel
      */
     public function send($notifiable, Notification $notification)
     {
-
-        $to = $notifiable->routeNotificationFor('fcm', $notification);
-
-        if (blank($to)) {
+        if (blank($to = $notifiable->routeNotificationFor('fcm', $notification))) {
             return;
         }
 
         $message = $notification->toFcm($notifiable);
         $options = method_exists($notification, 'options') ? $notification->options($notifiable) : [];
+        $optionsNotification = method_exists($notification, 'optionsNotification') ?
+            $notification->optionsNotification($notifiable) :
+            [];
         $url = 'https://fcm.googleapis.com/fcm/send';
         $serverKey = config('fcm.server_key');
+        $ignoreKeys = config('fcm.ignore', []);
 
-        $data = array_merge([
-            "registration_ids" => array_values(array_filter($to, fn($v) => !in_array($v,
-                    ['none', '_firebaseClient.notificationToken', '32123132132']) || strlen($v) > 100)),
-            "notification" => [
+        $data = array_filter(array_merge([
+            "registration_ids" => array_values(array_filter($to,
+                fn($v) => !in_array($v, $ignoreKeys) || strlen($v) > 100)),
+            "notification" => array_merge([
                 "title" => $message['title'] ?? config('app.name'),
                 "body" => $message['body'],
-            ]
-        ], $options);
+            ], $optionsNotification),
+        ], $options));
 
 
-        return Http::withHeaders(['Authorization' => "key={$serverKey}"])->withoutVerifying()->acceptJson()->asJson()->post($url,
-            $data)->json();
+        return Http::withHeaders(['Authorization' => "key={$serverKey}"])
+            ->withoutVerifying()
+            ->acceptJson()
+            ->asJson()
+            ->post($url, $data)
+            ->json();
     }
 }

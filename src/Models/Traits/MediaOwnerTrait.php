@@ -1,13 +1,17 @@
 <?php
 
-namespace Habib\dashboard\src\Models\Traits;
+namespace Habib\Dashboard\Models\Traits;
 
 use Habib\Dashboard\Models\Media;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-trait MediaModelsTrait
+trait MediaOwnerTrait
 {
-    public function models(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    /**
+     * @return MorphMany
+     */
+    public function owners(): MorphMany
     {
-        return $this->morphMany(Media::class, 'model');
+        return $this->morphMany(Media::class, 'owner');
     }
 }

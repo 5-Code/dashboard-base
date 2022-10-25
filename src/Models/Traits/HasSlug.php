@@ -3,6 +3,7 @@
 namespace Habib\Dashboard\Models\Traits;
 
 use App\Casts\SlugCast;
+use Habib\Dashboard\Helpers\Slugger;
 
 trait HasSlug
 {
@@ -13,15 +14,48 @@ trait HasSlug
         });
     }
 
-    public function initialize(): void
+    public function initializeHasSlug(): void
     {
-        if (!$this->has('slug')) {
+        if (!$this->hasCast('slug')) {
             $this->mergeCasts([
                 'slug' => SlugCast::class
             ]);
         }
-        if (!$this->fillable('slug')) {
+        if (!$this->isFillable('slug')) {
             $this->mergeFillable(['slug']);
         }
+    }
+
+    /**
+     * @param array $data
+     * @param string $key
+     * @param string $slugKey
+     * @return $this
+     */
+    public function sluggerByLocals(array $data, string $key = 'name', string $slugKey = 'slug'): static
+    {
+        $data ??= $this->getAttribute($key) ?? [];
+        $slug = [];
+        foreach (locals() as $local) {
+            $slug[$local] = Slugger::new()->slug($this, "{$slugKey}->{$local}", $data[$key][$local]);
+        }
+        $this->setAttribute($slugKey, $slug);
+        return $this;
+    }
+
+    /**
+     * @param array $data
+     * @param string $key
+     * @param string $slugKey
+     * @return $this
+     */
+    public function slugger(array $data, string $key = 'name', string $slugKey = 'slug'): static
+    {
+        $data ??= $this->getAttributes()[$key] ?? [];
+
+        $slug = Slugger::new()->slug($this, $slugKey, $data[$key]);
+
+        $this->setAttribute($slugKey, $slug);
+        return $this;
     }
 }

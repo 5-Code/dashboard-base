@@ -1,30 +1,26 @@
 <?php
 
-namespace Habib\Dashboard\Actions\Blog;
+namespace Habib\Dashboard\Actions\Contact;
 
-use App\Helpers\Slugger;
+use Habib\Dashboard\Helpers\Slugger;
 use Habib\Dashboard\Actions\ActionInterface;
-use Habib\Dashboard\Models\Blog;
+use Habib\Dashboard\Models\Contact;
 use Habib\Dashboard\Services\Upload\UploadService;
 
-class UpdateBlogAction implements ActionInterface
+class UpdateContactAction implements ActionInterface
 {
-    public function __construct(public Blog $model)
+    public function __construct(public Contact $model)
     {
     }
 
     /**
      * @param array $data
-     * @return false|Blog
+     * @return false|Contact
      */
     public function handle(array $data)
     {
-        if (isset($data['image'])) {
-            $image = UploadService::new()->upload($data['image'], 'blogs');
-            $data['image'] = $image->getPath();
-        }
-        $this->model->fill($data);
-        if (!$this->model->isDirty('title')) {
+
+        if (!$this->model->fill($data)->isDirty('title')) {
             $slug = [];
             foreach (locals() as $local) {
                 $slug[$local] = Slugger::new()->slug($this->model, "slug->{$local}", $data['title'][$local]);

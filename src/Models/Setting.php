@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace Habib\Dashboard\Models;
 
 use Form;
+use Habib\Dashboard\Models\Traits\HasOwner;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;

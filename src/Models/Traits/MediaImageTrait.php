@@ -1,17 +1,35 @@
 <?php
 
-namespace Habib\dashboard\src\Models\Traits;
+namespace Habib\Dashboard\Models\Traits;
 
 use Habib\Dashboard\Models\Media;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
-trait MediaOwnerTrait
+trait MediaImageTrait
 {
-    /**
-     * @return MorphMany
-     */
-    public function owners(): MorphMany
+    use MediaTraits;
+
+    public static function bootMediaImageTrait(): void
     {
-        return $this->morphMany(Media::class, 'owner');
+        static::deleting(static function (self $model) {
+            $model->image->delete();
+        });
+    }
+
+    /**
+     * @param Media $media
+     * @return Media|bool
+     */
+    public function attachMedia(Media $media): Media|bool
+    {
+        return $this->image()->save($media);
+    }
+
+    /**
+     * @return MorphOne
+     */
+    public function image(): MorphOne
+    {
+        return $this->morphOne(Media::class, 'model');
     }
 }

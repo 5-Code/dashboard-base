@@ -14,7 +14,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Habib\\Dashboard\\": "src/"
+            "Habib\\Dashboard\\": "src/",
+            "Habib\\Dashboard\\Test\\": "tests/"
         },
         "files": [
             "helpers/main.php"
@@ -36,12 +37,31 @@
         "doctrine/dbal": "*",
         "intervention/image": "^3.0.0-alpha.5",
         "stevebauman/location": "^6",
+        "spatie/laravel-searchable": "^1.11",
         "ext-fileinfo": "*",
+        "madeitbelgium/seo-analyzer": "^0.7.3",
+        "spatie/image-optimizer": "^1",
         "barryvdh/laravel-debugbar": "*",
         "laravel/telescope": "*"
     },
+    "require-dev": {
+        "pestphp/pest": "^1.21",
+        "phpunit/phpunit": "^8.5.21|^9.4.4",
+        "symfony/var-dumper": "^4.2|^5.0|^6.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Habib\\Dashboard\\Test\\": "tests"
+        },
+        "files": [
+            "tests/helpers.php"
+        ]
+    },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "extra": {
         "laravel": {

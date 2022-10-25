@@ -1,13 +1,17 @@
 <?php
 
-namespace App\Models;
+namespace Habib\Dashboard\Models;
 
 use Habib\Dashboard\Casts\JsonCast;
+use Habib\Dashboard\Models\Traits\HasOwner;
+use Habib\Dashboard\Models\Traits\HasSlug;
 use Habib\Dashboard\Models\Traits\MediaModelsTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Ticket extends Model
 {
+    use HasOwner;
+    use HasSlug;
     use MediaModelsTrait;
 
     protected $fillable = [

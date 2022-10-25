@@ -2,33 +2,37 @@
 
 namespace Habib\Dashboard\Actions\Blog;
 
-use App\Helpers\Slugger;
-use Habib\Dashboard\Actions\CreateActionInterface;
+use DB;
+use Habib\Dashboard\Actions\ActionInterface;
+use Habib\Dashboard\Events\Blog\BlogCreatedEvent;
+use Habib\Dashboard\Events\Blog\BlogCreatingEvent;
 use Habib\Dashboard\Models\Blog;
+use Habib\Dashboard\Models\Media;
 use Habib\Dashboard\Services\Upload\UploadService;
 
-class CreateNewBlog implements CreateActionInterface
+class CreateNewBlogAction implements ActionInterface
 {
     /**
      * @param array $data
      * @return bool|Blog
      */
-    public function create(array $data)
+    public function handle(array $data)
     {
-        $data['owner_id'] = auth()->id();
-        $data['owner_type'] = auth()->user()->getMorphClass();
-        $image = UploadService::new()->upload($data['image'], 'blogs');
-        $data['image'] = $image->getPath();
-        $model = new Blog($data);
-        $slug = [];
-        foreach (locals() as $local) {
-            $slug[$local] = Slugger::new()->slug($model, "slug->{$local}", $data['title'][$local]);
-        }
+        return DB::transaction(function () {
+            $data['owner_id'] = auth()->id();
+            $data['owner_type'] = auth()->user()->getMorphClass();
+            $image = UploadService::new()->upload($data['image'], 'blogs');
+            $model = new Blog($data);
+            $image = Media::create($model->parseMediaInfo($image));
+            $model->image_id = $image->id;
+            $model->sluggerByLocals($data, 'title', 'slug');
+            event(new BlogCreatingEvent($model));
 
-        if (!$model->setAttribute('slug', $slug)->save()) {
-            return false;
-        }
-
-        return $model;
+            if (!$model->save()) {
+                return false;
+            }
+            $image->model()->associate($model);
+            return tap($model, fn($model) => event(new BlogCreatedEvent($model)));
+        });
     }
 }

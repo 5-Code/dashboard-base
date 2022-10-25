@@ -10,7 +10,10 @@ return new class extends Migration {
         Schema::create('faqs', function (Blueprint $table) {
             $table->id();
             $table->lang('title');
+            $table->lang('slug');
             $table->lang('description');
+            $table->boolean('status')->default(true);
+            $table->nullableMorphs('owner');
             $table->softDeletesTz();
             $table->timestampsTz();
         });

@@ -9,14 +9,20 @@ class LocalMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        $default_local = app()->getLocale();
+        $app = app();
+        $default_local = $app->getLocale();
+
         if ($request->is('api/*')) {
             $locale = $request->get('lang', $request->get('local', $default_local));
         } else {
             $locale = $request->header('Accept-Language');
             $locale = explode(',', $locale ?? $default_local)[0] ?? $default_local;
             $locale = explode('-', $locale)[0] ?? $default_local;
-            $locale = $request->get('lang', $request->get('local', $request->session()->get('locale', $locale)));
+            $locale = $request->get('lang',
+                $request->get('local',
+                    $request->hasSession() ? $request->session()->get('locale', $locale) : $default_local
+                )
+            );
         }
 
         if (!in_array($locale, config('app.locales'))) {
@@ -25,7 +31,7 @@ class LocalMiddleware
 
         if ($locale !== $default_local) {
             $request->setLocale($locale);
-            app()->setLocale($locale);
+            $app->setLocale($locale);
         }
 
         if (!$request->is('api/*')) {

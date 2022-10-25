@@ -2,10 +2,10 @@
 
 namespace Habib\Dashboard\Services\Upload;
 
-use File;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Image;
+use Intervention\Image\Drivers\Imagick\Image;
 use Intervention\Image\ImageManager;
 
 class FileInfo implements Arrayable
@@ -18,6 +18,7 @@ class FileInfo implements Arrayable
         private string $disk,
         private string $hash,
         private int $size,
+        private bool $visibility = true,
         private null|string $collection = null,
     ) {
     }
@@ -101,11 +102,20 @@ class FileInfo implements Arrayable
     }
 
     /**
+     * @return bool
+     */
+    public function isVisibility(): bool
+    {
+        return $this->visibility;
+    }
+
+
+    /**
      * @return Image
      */
     public function image(): Image
     {
-        $file = File::get(
+        $file = new File(
             Storage::disk($this->getDisk())->path($this->getPath() . DIRECTORY_SEPARATOR . $this->getName())
         );
 

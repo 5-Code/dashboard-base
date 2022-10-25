@@ -2,9 +2,8 @@
 
 namespace Habib\Dashboard\Actions\Faq;
 
-use App\Helpers\Slugger;
+use Habib\Dashboard\Helpers\Slugger;
 use Habib\Dashboard\Actions\ActionInterface;
-use Habib\Dashboard\Models\Blog;
 use Habib\Dashboard\Models\Faq;
 
 class UpdateFaqAction implements ActionInterface
@@ -15,7 +14,7 @@ class UpdateFaqAction implements ActionInterface
 
     /**
      * @param array $data
-     * @return false|Blog
+     * @return false|Faq
      */
     public function handle(array $data)
     {

@@ -2,11 +2,13 @@
 
 namespace Habib\Dashboard\Providers;
 
+use Closure;
 use Form;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\ColumnDefinition;
+use Illuminate\Database\Schema\Grammars\MySqlGrammar;
+use Illuminate\Database\Schema\Grammars\PostgresGrammar;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class DashboardServiceProvider extends ServiceProvider
@@ -28,9 +30,6 @@ class DashboardServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
-        Schema::defaultStringLength(191);
-
         Http::macro('getIp', function (string $ip) {
             return Http::get("http://www.geoplugin.net/json.gp?ip={$ip}")->body();
         });
@@ -68,21 +67,29 @@ class DashboardServiceProvider extends ServiceProvider
             return $this->boolean($name);
         });
 
-
-        Blueprint::macro('lang', function ($columnName, $locales = [], $unique = false): ColumnDefinition {
+        Blueprint::macro('lang', function ($columnName, $locales = [], Closure $closure = null): ColumnDefinition {
             /** @var Blueprint $this */
             $column = $this->addColumn('jsonb', $columnName, ["precision" => 0]);
-            collect(count($locales) ? $locales : locals())->map(function ($locale) use ($columnName, $unique) {
+            collect(count($locales) ? $locales : locals())->map(function ($locale) use ($columnName, $closure) {
                 /** @var Blueprint $this */
                 $localeColumn = $this->text("{$columnName}_{$locale}")
                     ->nullable()
                     ->always()
-                    ->storedAs("json_unquote(JSON_EXTRACT($columnName,'$.$locale'))")
-                    ->comment("this is $columnName with locale : $locale")
-//                    ->index()
+                    ->comment("this is always $columnName with locale fulltext : $locale")
                     ->fulltext();
-                if ($unique) {
-                    $localeColumn->unique();
+
+                $database = config('database.default');
+
+                $databaseDriver = config("database.connections.{$database}.driver");
+
+                $localeColumn = match ($databaseDriver) {
+                    'pgsql' => $localeColumn->storedAs("($columnName ->> '$locale')"),
+                    'mysql' => $localeColumn->storedAs("json_unquote(JSON_EXTRACT($columnName,'$.$locale'))")(),
+                    default => $localeColumn,
+                };
+
+                if ($closure) {
+                    $closure($localeColumn, $locale, $columnName, $this);
                 }
             });
             return $column;

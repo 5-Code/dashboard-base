@@ -15,7 +15,8 @@ return new class extends Migration {
             $table->string('browser')->nullable()->index();
             $table->string('device')->nullable()->index();
             $table->string('locale')->nullable()->index();
-            $table->nullableMorphs('user');
+            $table->json('details')->nullable();
+            $table->nullableMorphs('owner');
             $table->softDeletesTz();
             $table->timestampsTz();
         });

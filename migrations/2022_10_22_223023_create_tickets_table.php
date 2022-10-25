@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('slug');
+            $table->lang('slug');
             $table->string('status');
             $table->string('priority')->default('low');
             $table->text('description');

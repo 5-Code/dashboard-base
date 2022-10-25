@@ -1,21 +1,21 @@
 <?php
 
-namespace Habib\Dashboard\Actions\Blog;
+namespace Habib\Dashboard\Actions\Faq;
 
-use App\Helpers\Slugger;
 use Habib\Dashboard\Actions\ActionInterface;
-use Habib\Dashboard\Actions\DeleteActionInterface;
-use Habib\Dashboard\Models\Blog;
+use Habib\Dashboard\Models\Faq;
 
-class DeleteBlogAction implements ActionInterface
+class DeleteFaqAction implements ActionInterface
 {
-    public function __construct(public Blog $model){}
+    public function __construct(public Faq $model)
+    {
+    }
 
     /**
      * @param array $data
      * @return bool|null
      */
-    public function handle(array  $data = [])
+    public function handle(array $data = [])
     {
         return $this->model->delete();
     }

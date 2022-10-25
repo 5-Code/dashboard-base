@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace Habib\Dashboard\Helpers;
 
 class Unavatar
 {
@@ -126,7 +126,7 @@ class Unavatar
         $attr['src'] = $this->toUrl();
 
         return sprintf('<img %s />', implode(' ', array_map(
-            fn ($k, $v) => sprintf('%s="%s"', $k, htmlspecialchars($v)),
+            fn($k, $v) => sprintf('%s="%s"', $k, htmlspecialchars($v)),
             array_keys($attr),
             $attr
         )));

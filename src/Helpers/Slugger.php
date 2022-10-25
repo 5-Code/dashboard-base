@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace Habib\Dashboard\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -21,8 +21,7 @@ class Slugger
     {
         $string = mb_strtolower($string, 'UTF-8');
         $string = preg_replace('/[^\p{L}\p{Nd}]+/u', $separator, $string);
-        $string = trim($string, $separator);
-        return $string;
+        return trim($string, $separator);
     }
 
     /**

@@ -25,7 +25,8 @@ if (!function_exists('createSlug')) {
         // Make alphanumeric (removes all other characters)
         // this makes the string safe especially when used as a part of a URL
         // this keeps latin characters and arabic charactrs as well
-        $string = preg_replace("/[^a-z0-9_\s\-اآؤئبپتثجچحخدذرزژسشصضطظعغفقكکگلمنوةيإأۀءهی۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩]#u/", "", $string);
+        $string = preg_replace("/[^a-z0-9_\s\-اآؤئبپتثجچحخدذرزژسشصضطظعغفقكکگلمنوةيإأۀءهی۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩]#u/", "",
+            $string);
 
         // Remove multiple dashes or whitespaces
         $string = preg_replace("/[\s-]+/", " ", $string);
@@ -47,8 +48,13 @@ if (!function_exists('setting')) {
      * @throws NotFoundExceptionInterface
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    function setting(string $name, $default = '', string $type = null, string $group_by = null, string $locale = null): string
-    {
+    function setting(
+        string $name,
+        $default = '',
+        string $type = null,
+        string $group_by = null,
+        string $locale = null
+    ): string {
 
         $locale = $locale ?? substr(app()->getLocale(), 0, 2);
         $type = $type ?? 'string';
@@ -66,7 +72,13 @@ if (!function_exists('setting')) {
 
         return Setting::firstOrCreate(
             ['name' => $name, 'locale' => $locale],
-            ['name' => $name, 'type' => $type, 'locale' => $locale, 'value' => $default ?? $name, 'group_by' => $group_by]
+            [
+                'name' => $name,
+                'type' => $type,
+                'locale' => $locale,
+                'value' => $default ?? $name,
+                'group_by' => $group_by
+            ]
         )->value ?? $default;
     }
 }
@@ -87,8 +99,11 @@ if (!function_exists('uploader')) {
         $files = [];
         if (is_array($input)) {
             foreach ($input as $key => $item) {
-                if (is_numeric($key)) $files[] = uploader($item, $folder, $validation);
-                else $files[$key] = uploader($item, $folder, $validation);
+                if (is_numeric($key)) {
+                    $files[] = uploader($item, $folder, $validation);
+                } else {
+                    $files[$key] = uploader($item, $folder, $validation);
+                }
             }
             return $files;
         }
@@ -98,15 +113,23 @@ if (!function_exists('uploader')) {
         $defaultDir = "uploads";
         // validate Image
         if (!$isFile) {
-            if (empty($validation)) $request->validate([$input => ['required', 'image', 'mimes:jpeg,jpg,png']]);
-            else $request->validate([$input => $validation]);
+            if (empty($validation)) {
+                $request->validate([$input => ['required', 'image', 'mimes:jpeg,jpg,png']]);
+            } else {
+                $request->validate([$input => $validation]);
+            }
         }
 
         // get file if not getting before
         $file = $isFile ? $input : $request->file($input);
 
         // this line if true throw Exception 400 with errors
-        if (blank($file->getClientOriginalExtension())) response()->json(["status" => false, "errors" => [(is_string($input) ? $input : "file") => "file without Extension try by other way please ♥."]], 400)->send();
+        if (blank($file->getClientOriginalExtension())) {
+            response()->json([
+                "status" => false,
+                "errors" => [(is_string($input) ? $input : "file") => "file without Extension try by other way please ♥."]
+            ], 400)->send();
+        }
 
         $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
 

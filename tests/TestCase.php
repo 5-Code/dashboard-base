@@ -1,8 +1,28 @@
 <?php
 
-namespace Habib\Dashboard\Tests;
+namespace Habib\Dashboard\Test;
 
-class TestCase
+use PHPUnit\Framework\TestCase as BaseTest;
+
+class TestCase extends BaseTest
 {
+
+    protected function setUp(): void
+    {
+        $this->emptyTempDirectory();
+    }
+
+    protected function emptyTempDirectory()
+    {
+        $tempDirPath = __DIR__ . '/temp';
+
+        $files = scandir($tempDirPath);
+
+        foreach ($files as $file) {
+            if (! in_array($file, ['.', '..', '.gitignore'])) {
+                unlink("{$tempDirPath}/{$file}");
+            }
+        }
+    }
 
 }
