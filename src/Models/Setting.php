@@ -4,7 +4,7 @@ namespace Habib\Dashboard\Models;
 
 use Form;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use Habib\Dashboard\Models\MainModel as  Model;
 use Illuminate\Validation\Rule;
 
 class Setting extends Model

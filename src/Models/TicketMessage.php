@@ -9,7 +9,7 @@ use Habib\Dashboard\Events\TicketMessage\TicketMessageDeletingEvent;
 use Habib\Dashboard\Events\TicketMessage\TicketMessageUpdatedEvent;
 use Habib\Dashboard\Events\TicketMessage\TicketMessageUpdatingEvent;
 use Habib\Dashboard\Models\Traits\HasOwner;
-use Illuminate\Database\Eloquent\Model;
+use Habib\Dashboard\Models\MainModel as  Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;

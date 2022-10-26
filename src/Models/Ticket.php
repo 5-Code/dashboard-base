@@ -11,7 +11,7 @@ use Habib\Dashboard\Events\Ticket\TicketUpdatedEvent;
 use Habib\Dashboard\Events\Ticket\TicketUpdatingEvent;
 use Habib\Dashboard\Models\Traits\HasOwner;
 use Habib\Dashboard\Models\Traits\HasSlug;
-use Illuminate\Database\Eloquent\Model;
+use Habib\Dashboard\Models\MainModel as  Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 

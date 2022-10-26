@@ -10,7 +10,7 @@ use Habib\Dashboard\Events\Visitor\VisitorDeletingEvent;
 use Habib\Dashboard\Events\Visitor\VisitorUpdatedEvent;
 use Habib\Dashboard\Events\Visitor\VisitorUpdatingEvent;
 use Habib\Dashboard\Models\Traits\HasOwner;
-use Illuminate\Database\Eloquent\Model;
+use Habib\Dashboard\Models\MainModel as  Model;
 
 class Visitor extends Model
 {

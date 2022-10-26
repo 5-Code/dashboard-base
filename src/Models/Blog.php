@@ -11,7 +11,7 @@ use Habib\Dashboard\Events\Blog\BlogUpdatedEvent;
 use Habib\Dashboard\Events\Blog\BlogUpdatingEvent;
 use Habib\Dashboard\Models\Traits\HasOwner;
 use Habib\Dashboard\Models\Traits\HasSlug;
-use Illuminate\Database\Eloquent\Model;
+use Habib\Dashboard\Models\MainModel as  Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;

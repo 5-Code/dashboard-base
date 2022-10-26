@@ -11,7 +11,7 @@ use Habib\Dashboard\Events\Faq\FaqUpdatedEvent;
 use Habib\Dashboard\Events\Faq\FaqUpdatingEvent;
 use Habib\Dashboard\Models\Traits\HasOwner;
 use Habib\Dashboard\Models\Traits\HasSlug;
-use Illuminate\Database\Eloquent\Model;
+use Habib\Dashboard\Models\MainModel as  Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Faq extends Model
