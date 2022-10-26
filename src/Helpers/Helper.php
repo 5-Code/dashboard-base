@@ -31,7 +31,7 @@ class Helper
             'owner_type' => $request->user()?->getMorphClass(),
             'owner_id' => $request->user()?->id,
         ], [
-            'country' => $location->countryName,
+            'country' => $location?->countryName ?? "egypt",
             'device' => $reqClient->getCurrentDevice(),
             'operating_system' => $reqClient->getOs(),
             'browser' => $reqClient->getCurrentUserAgent(),
