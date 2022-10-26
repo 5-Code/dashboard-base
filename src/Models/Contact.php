@@ -9,7 +9,6 @@ use Habib\Dashboard\Events\Contact\ContactDeletedEvent;
 use Habib\Dashboard\Events\Contact\ContactDeletingEvent;
 use Habib\Dashboard\Events\Contact\ContactUpdatedEvent;
 use Habib\Dashboard\Events\Contact\ContactUpdatingEvent;
-use Habib\Dashboard\Models\Traits\MediaModelsTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Spatie\MediaLibrary\HasMedia;

@@ -34,9 +34,9 @@ class Setting extends Model
     protected static function boot()
     {
         parent::boot();
-        static::creating(function (Model $model) {
+        static::creating(callback: function (self $model) {
             $model->locale ??= app()->getLocale();
-            $model->type ??= 'string';
+            $model?->type ??= 'string';
         });
     }
 

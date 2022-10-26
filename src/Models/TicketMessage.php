@@ -9,7 +9,6 @@ use Habib\Dashboard\Events\TicketMessage\TicketMessageDeletingEvent;
 use Habib\Dashboard\Events\TicketMessage\TicketMessageUpdatedEvent;
 use Habib\Dashboard\Events\TicketMessage\TicketMessageUpdatingEvent;
 use Habib\Dashboard\Models\Traits\HasOwner;
-use Habib\Dashboard\Models\Traits\MediaModelsTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
