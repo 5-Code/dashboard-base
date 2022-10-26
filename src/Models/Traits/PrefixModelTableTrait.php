@@ -7,11 +7,10 @@ trait PrefixModelTableTrait
     public function getTable()
     {
         $prefix = config('dashboard.table_prefix', 'dashboard_');
+
         $table = parent::getTable();
-        return str_contains(
-            $table,
-            $prefix
-        ) ? $table : $prefix . $table;
+
+        return str_starts_with($table, $prefix) ? $table : $prefix . $table;
 
     }
 }
