@@ -2,7 +2,7 @@
 
 namespace Habib\Dashboard\Models\Traits;
 
-use App\Casts\SlugCast;
+use Habib\Dashboard\Casts\SlugCast;
 use Habib\Dashboard\Helpers\Slugger;
 
 trait HasSlug
