@@ -6,6 +6,12 @@ trait PrefixModelTableTrait
 {
     public function getTable()
     {
-        return config('dashboard.table_prefix', '') . parent::getTable();
+        $prefix = config('dashboard.table_prefix', 'dashboard_');
+        $table = parent::getTable();
+        return str_contains(
+            $table,
+            $prefix
+        ) ? $table : $prefix . $table;
+
     }
 }

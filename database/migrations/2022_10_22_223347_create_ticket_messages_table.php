@@ -14,8 +14,8 @@ return new class extends Migration {
         Schema::create($this->getTablePrefix() . config('dashboard.ticket_messages.table_name', 'ticket_messages'),
             function (Blueprint $table) {
                 $table->id();
-                $table->foreignIdFor(Ticket::class, 'ticket_id')
-                    ->constrained()
+                $table->foreignIdFor($new = new Ticket, 'ticket_id')
+                    ->constrained($new->getTable())
                     ->cascadeOnDelete();
                 $table->morphs('owner');
                 $table->text('message');
