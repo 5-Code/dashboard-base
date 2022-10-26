@@ -10,7 +10,7 @@ trait HasSlug
     public static function bootHasSlug(): void
     {
         static::creating(static function (self $model) {
-            if ($model->slug) {
+            if (!$model->hasAttributeMutator('slug')) {
                 $model->sluggerByLocals($model->toArray());
             }
         });
