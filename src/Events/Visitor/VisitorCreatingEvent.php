@@ -2,6 +2,8 @@
 
 namespace Habib\Dashboard\Events\Visitor;
 
+use Habib\Dashboard\Models\Visitor;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -16,12 +18,14 @@ class VisitorCreatingEvent
      *
      * @return void
      */
-    public function __construct(public \Habib\Dashboard\Models\Visitor $visitor) {}
+    public function __construct(public Visitor $visitor)
+    {
+    }
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|array
      */
     public function broadcastOn()
     {

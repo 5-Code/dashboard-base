@@ -3,6 +3,12 @@
 namespace Habib\Dashboard\Models;
 
 use Habib\Dashboard\Casts\JsonCast;
+use Habib\Dashboard\Events\Visitor\VisitorCreatedEvent;
+use Habib\Dashboard\Events\Visitor\VisitorCreatingEvent;
+use Habib\Dashboard\Events\Visitor\VisitorDeletedEvent;
+use Habib\Dashboard\Events\Visitor\VisitorDeletingEvent;
+use Habib\Dashboard\Events\Visitor\VisitorUpdatedEvent;
+use Habib\Dashboard\Events\Visitor\VisitorUpdatingEvent;
 use Habib\Dashboard\Models\Traits\HasOwner;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,16 +26,17 @@ class Visitor extends Model
         'browser' => 'string',
         'device' => 'string',
         'locale' => 'string',
-        'user' => 'string',
+        'user_id' => 'integer',
+        'user_type' => 'string',
     ];
 
     protected $dispatchesEvents = [
-        'creating' => \Habib\Dashboard\Events\Visitor\VisitorCreatingEvent::class,
-        'updating' => \Habib\Dashboard\Events\Visitor\VisitorUpdatingEvent::class,
-        'deleting' => \Habib\Dashboard\Events\Visitor\VisitorDeletingEvent::class,
-        'created' => \Habib\Dashboard\Events\Visitor\VisitorCreatedEvent::class,
-        'updated' => \Habib\Dashboard\Events\Visitor\VisitorUpdatedEvent::class,
-        'deleted' => \Habib\Dashboard\Events\Visitor\VisitorDeletedEvent::class,
+        'creating' => VisitorCreatingEvent::class,
+        'updating' => VisitorUpdatingEvent::class,
+        'deleting' => VisitorDeletingEvent::class,
+        'created' => VisitorCreatedEvent::class,
+        'updated' => VisitorUpdatedEvent::class,
+        'deleted' => VisitorDeletedEvent::class,
     ];
 
     public function user()

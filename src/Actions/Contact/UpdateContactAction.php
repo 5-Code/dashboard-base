@@ -2,10 +2,9 @@
 
 namespace Habib\Dashboard\Actions\Contact;
 
-use Habib\Dashboard\Helpers\Slugger;
 use Habib\Dashboard\Actions\ActionInterface;
+use Habib\Dashboard\Helpers\Slugger;
 use Habib\Dashboard\Models\Contact;
-use Habib\Dashboard\Services\Upload\UploadService;
 
 class UpdateContactAction implements ActionInterface
 {

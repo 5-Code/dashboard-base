@@ -295,7 +295,8 @@ class RequestClient
                 'country' => $country,
                 'country_code' => $location->countryCode
             ];
-        } catch (Exception $e) {}
+        } catch (Exception $e) {
+        }
 
         return [
             'country' => trans('Unknown'),

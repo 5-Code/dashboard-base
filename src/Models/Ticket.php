@@ -3,6 +3,12 @@
 namespace Habib\Dashboard\Models;
 
 use Habib\Dashboard\Casts\JsonCast;
+use Habib\Dashboard\Events\Ticket\TicketCreatedEvent;
+use Habib\Dashboard\Events\Ticket\TicketCreatingEvent;
+use Habib\Dashboard\Events\Ticket\TicketDeletedEvent;
+use Habib\Dashboard\Events\Ticket\TicketDeletingEvent;
+use Habib\Dashboard\Events\Ticket\TicketUpdatedEvent;
+use Habib\Dashboard\Events\Ticket\TicketUpdatingEvent;
 use Habib\Dashboard\Models\Traits\HasOwner;
 use Habib\Dashboard\Models\Traits\HasSlug;
 use Habib\Dashboard\Models\Traits\MediaModelsTrait;
@@ -36,12 +42,12 @@ class Ticket extends Model
     ];
 
     protected $dispatchesEvents = [
-        'creating' => \Habib\Dashboard\Events\Ticket\TicketCreatingEvent::class,
-        'updating' => \Habib\Dashboard\Events\Ticket\TicketUpdatingEvent::class,
-        'deleting' => \Habib\Dashboard\Events\Ticket\TicketDeletingEvent::class,
-        'created' => \Habib\Dashboard\Events\Ticket\TicketCreatedEvent::class,
-        'updated' => \Habib\Dashboard\Events\Ticket\TicketUpdatedEvent::class,
-        'deleted' => \Habib\Dashboard\Events\Ticket\TicketDeletedEvent::class,
+        'creating' => TicketCreatingEvent::class,
+        'updating' => TicketUpdatingEvent::class,
+        'deleting' => TicketDeletingEvent::class,
+        'created' => TicketCreatedEvent::class,
+        'updated' => TicketUpdatedEvent::class,
+        'deleted' => TicketDeletedEvent::class,
     ];
 
     public function owner()

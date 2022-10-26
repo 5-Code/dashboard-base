@@ -3,6 +3,12 @@
 namespace Habib\Dashboard\Models;
 
 use Habib\Dashboard\Casts\JsonCast;
+use Habib\Dashboard\Events\Contact\ContactCreatedEvent;
+use Habib\Dashboard\Events\Contact\ContactCreatingEvent;
+use Habib\Dashboard\Events\Contact\ContactDeletedEvent;
+use Habib\Dashboard\Events\Contact\ContactDeletingEvent;
+use Habib\Dashboard\Events\Contact\ContactUpdatedEvent;
+use Habib\Dashboard\Events\Contact\ContactUpdatingEvent;
 use Habib\Dashboard\Models\Traits\MediaModelsTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -25,12 +31,12 @@ class Contact extends Model
     ];
 
     protected $dispatchesEvents = [
-        'creating' => \Habib\Dashboard\Events\Contact\ContactCreatingEvent::class,
-        'updating' => \Habib\Dashboard\Events\Contact\ContactUpdatingEvent::class,
-        'deleting' => \Habib\Dashboard\Events\Contact\ContactDeletingEvent::class,
-        'created' => \Habib\Dashboard\Events\Contact\ContactCreatedEvent::class,
-        'updated' => \Habib\Dashboard\Events\Contact\ContactUpdatedEvent::class,
-        'deleted' => \Habib\Dashboard\Events\Contact\ContactDeletedEvent::class,
+        'creating' => ContactCreatingEvent::class,
+        'updating' => ContactUpdatingEvent::class,
+        'deleting' => ContactDeletingEvent::class,
+        'created' => ContactCreatedEvent::class,
+        'updated' => ContactUpdatedEvent::class,
+        'deleted' => ContactDeletedEvent::class,
     ];
 
     /**

@@ -2,8 +2,8 @@
 
 namespace Habib\Dashboard\Actions\Faq;
 
-use Habib\Dashboard\Helpers\Slugger;
 use Habib\Dashboard\Actions\ActionInterface;
+use Habib\Dashboard\Helpers\Slugger;
 use Habib\Dashboard\Models\Faq;
 
 class UpdateFaqAction implements ActionInterface

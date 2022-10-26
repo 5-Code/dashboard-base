@@ -40,7 +40,7 @@ class DashboardServiceProvider extends ServiceProvider
             ], 'config');
             $this->publishes([
                 $dirname . '/database/migrations/2020_08_04_195229_create_settings_table.php' => database_path('migrations/2020_08_04_195229_create_settings_table.php'),
-                $dirname . '/database/migrations/2022_10_19_120020_create_media_table.php' => database_path('migrations/2022_10_19_120020_create_media_table.php'),
+//                $dirname . '/database/migrations/2022_10_19_120020_create_media_table.php' => database_path('migrations/2022_10_19_120020_create_media_table.php'),
                 $dirname . '/database/migrations/2022_10_22_181058_create_faqs_table.php' => database_path('migrations/2022_10_22_181058_create_faqs_table.php'),
                 $dirname . '/database/migrations/2022_10_22_202218_create_blogs_table.php' => database_path('migrations/2022_10_22_202218_create_blogs_table.php'),
                 $dirname . '/database/migrations/2022_10_22_213058_create_contacts_table.php' => database_path('migrations/2022_10_22_213058_create_contacts_table.php'),

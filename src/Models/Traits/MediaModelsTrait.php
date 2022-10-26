@@ -3,7 +3,6 @@
 namespace Habib\Dashboard\Models\Traits;
 
 use Habib\Dashboard\Models\Media;
-use Habib\Dashboard\Services\Upload\FileInfo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 

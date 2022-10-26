@@ -2,9 +2,7 @@
 
 namespace Habib\Dashboard\Http\Request;
 
-use Exception;
 use Illuminate\Support\Arr;
-use Stevebauman\Location\Facades\Location;
 
 trait RequestMethods
 {

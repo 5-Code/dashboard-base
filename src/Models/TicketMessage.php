@@ -2,9 +2,17 @@
 
 namespace Habib\Dashboard\Models;
 
+use Habib\Dashboard\Events\TicketMessage\TicketMessageCreatedEvent;
+use Habib\Dashboard\Events\TicketMessage\TicketMessageCreatingEvent;
+use Habib\Dashboard\Events\TicketMessage\TicketMessageDeletedEvent;
+use Habib\Dashboard\Events\TicketMessage\TicketMessageDeletingEvent;
+use Habib\Dashboard\Events\TicketMessage\TicketMessageUpdatedEvent;
+use Habib\Dashboard\Events\TicketMessage\TicketMessageUpdatingEvent;
 use Habib\Dashboard\Models\Traits\HasOwner;
 use Habib\Dashboard\Models\Traits\MediaModelsTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TicketMessage extends Model
@@ -21,26 +29,26 @@ class TicketMessage extends Model
     ];
 
     protected $dispatchesEvents = [
-        'creating' => \Habib\Dashboard\Events\TicketMessage\TicketMessageCreatingEvent::class,
-        'updating' => \Habib\Dashboard\Events\TicketMessage\TicketMessageUpdatingEvent::class,
-        'deleting' => \Habib\Dashboard\Events\TicketMessage\TicketMessageDeletingEvent::class,
-        'created' => \Habib\Dashboard\Events\TicketMessage\TicketMessageCreatedEvent::class,
-        'updated' => \Habib\Dashboard\Events\TicketMessage\TicketMessageUpdatedEvent::class,
-        'deleted' => \Habib\Dashboard\Events\TicketMessage\TicketMessageDeletedEvent::class,
+        'creating' => TicketMessageCreatingEvent::class,
+        'updating' => TicketMessageUpdatingEvent::class,
+        'deleting' => TicketMessageDeletingEvent::class,
+        'created' => TicketMessageCreatedEvent::class,
+        'updated' => TicketMessageUpdatedEvent::class,
+        'deleted' => TicketMessageDeletedEvent::class,
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return MorphTo
      */
-    public function owner(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function owner(): MorphTo
     {
         return $this->morphTo();
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function ticket(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function ticket(): BelongsTo
     {
         return $this->belongsTo(Ticket::class);
     }

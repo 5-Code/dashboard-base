@@ -11,6 +11,7 @@ use Storage;
 class Media extends Model
 {
     use HasOwner;
+
     protected $guarded = [];
 
     protected $casts = [

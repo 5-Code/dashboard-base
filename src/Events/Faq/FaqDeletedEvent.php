@@ -2,6 +2,8 @@
 
 namespace Habib\Dashboard\Events\Faq;
 
+use Habib\Dashboard\Models\Faq;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -16,12 +18,14 @@ class FaqDeletedEvent
      *
      * @return void
      */
-public function __construct(public \Habib\Dashboard\Models\Faq $faq) {}
+    public function __construct(public Faq $faq)
+    {
+    }
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|array
      */
     public function broadcastOn()
     {

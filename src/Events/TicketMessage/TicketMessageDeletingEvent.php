@@ -2,6 +2,8 @@
 
 namespace Habib\Dashboard\Events\TicketMessage;
 
+use Habib\Dashboard\Models\TicketMessage;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -16,13 +18,15 @@ class TicketMessageDeletingEvent
      *
      * @return void
      */
-    public function __construct(public \Habib\Dashboard\Models\TicketMessage $ticketMessage) {}
+    public function __construct(public TicketMessage $ticketMessage)
+    {
+    }
 
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|array
      */
     public function broadcastOn()
     {

@@ -3,6 +3,12 @@
 namespace Habib\Dashboard\Models;
 
 use Habib\Dashboard\Casts\JsonCast;
+use Habib\Dashboard\Events\Faq\FaqCreatedEvent;
+use Habib\Dashboard\Events\Faq\FaqCreatingEvent;
+use Habib\Dashboard\Events\Faq\FaqDeletedEvent;
+use Habib\Dashboard\Events\Faq\FaqDeletingEvent;
+use Habib\Dashboard\Events\Faq\FaqUpdatedEvent;
+use Habib\Dashboard\Events\Faq\FaqUpdatingEvent;
 use Habib\Dashboard\Models\Traits\HasOwner;
 use Habib\Dashboard\Models\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +18,7 @@ class Faq extends Model
 {
     use HasOwner;
     use HasSlug;
+
     protected $fillable = [
         'title',
         'slug',
@@ -27,12 +34,12 @@ class Faq extends Model
     ];
 
     protected $dispatchesEvents = [
-        'creating' => \Habib\Dashboard\Events\Faq\FaqCreatingEvent::class,
-        'updating' => \Habib\Dashboard\Events\Faq\FaqUpdatingEvent::class,
-        'deleting' => \Habib\Dashboard\Events\Faq\FaqDeletingEvent::class,
-        'created' => \Habib\Dashboard\Events\Faq\FaqCreatedEvent::class,
-        'updated' => \Habib\Dashboard\Events\Faq\FaqUpdatedEvent::class,
-        'deleted' => \Habib\Dashboard\Events\Faq\FaqDeletedEvent::class,
+        'creating' => FaqCreatingEvent::class,
+        'updating' => FaqUpdatingEvent::class,
+        'deleting' => FaqDeletingEvent::class,
+        'created' => FaqCreatedEvent::class,
+        'updated' => FaqUpdatedEvent::class,
+        'deleted' => FaqDeletedEvent::class,
     ];
 
     /**
