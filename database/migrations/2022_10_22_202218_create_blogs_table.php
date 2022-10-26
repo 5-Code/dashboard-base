@@ -1,10 +1,10 @@
 <?php
 
 use Habib\Dashboard\Helpers\Traits\MigrateHelperTrait;
-use Habib\Dashboard\Models\Media;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 return new class extends Migration {
     use MigrateHelperTrait;

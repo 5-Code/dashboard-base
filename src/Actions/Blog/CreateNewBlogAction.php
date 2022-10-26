@@ -7,8 +7,6 @@ use Habib\Dashboard\Actions\ActionInterface;
 use Habib\Dashboard\Events\Blog\BlogCreatedEvent;
 use Habib\Dashboard\Events\Blog\BlogCreatingEvent;
 use Habib\Dashboard\Models\Blog;
-use Habib\Dashboard\Models\Media;
-use Habib\Dashboard\Services\Upload\UploadService;
 
 class CreateNewBlogAction implements ActionInterface
 {
@@ -21,20 +19,17 @@ class CreateNewBlogAction implements ActionInterface
         return DB::transaction(function () {
             $data['owner_id'] = auth()->id();
             $data['owner_type'] = auth()->user()->getMorphClass();
-            $image = UploadService::new()->upload($data['image'], 'blogs', [
-                'dir' => 'blogs',
-            ]);
+
             $model = new Blog($data);
-            $image = Media::create($model->parseMediaInfo($image));
-            $model->image_id = $image->id;
+
             $model->sluggerByLocals($data, 'title', 'slug');
+
             event(new BlogCreatingEvent($model));
 
             if (!$model->save()) {
                 return false;
             }
-
-            $image->model()->associate($model);
+            $model->addMedia($data['image'])->toMediaCollection('blogs');
 
             return $model->tap(fn($model) => event(new BlogCreatedEvent($model)));
         });
