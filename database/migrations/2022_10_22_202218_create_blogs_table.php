@@ -20,7 +20,8 @@ return new class extends Migration {
                 $table->foreignIdFor(Media::class, 'image_id')->nullable();
                 $table->boolean('status')->default(true);
                 $table->nullableMorphs('owner');
-                $table->timestamps();
+                $table->softDeletesTz();
+                $table->timestampsTz();
             });
     }
 

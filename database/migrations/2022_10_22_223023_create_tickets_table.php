@@ -21,7 +21,8 @@ return new class extends Migration {
                 $table->jsonb('details')->nullable();
                 $table->nullableMorphs('owner');
                 $table->nullableMorphs('assignee');
-                $table->timestamps();
+                $table->softDeletesTz();
+                $table->timestampsTz();
             });
     }
 

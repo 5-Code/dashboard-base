@@ -14,13 +14,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class TicketMessage extends Model
+class TicketMessage extends Model implements HasMedia
 {
     use HasOwner;
-    use MediaModelsTrait;
     use SoftDeletes;
-
+    use InteractsWithMedia;
     protected $fillable = [
         'message',
         'owner_id',

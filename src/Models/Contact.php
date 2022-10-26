@@ -12,10 +12,13 @@ use Habib\Dashboard\Events\Contact\ContactUpdatingEvent;
 use Habib\Dashboard\Models\Traits\MediaModelsTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Contact extends Model
+class Contact extends Model implements HasMedia
 {
-    use MediaModelsTrait;
+
+    use InteractsWithMedia;
 
     protected $fillable = [
         'name',

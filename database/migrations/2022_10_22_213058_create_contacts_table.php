@@ -20,7 +20,8 @@ return new class extends Migration {
                 $table->text('message');
                 $table->jsonb('details')->nullable();
                 $table->nullableMorphs('contactable');
-                $table->timestamps();
+                $table->softDeletesTz();
+                $table->timestampsTz();
             });
     }
 
