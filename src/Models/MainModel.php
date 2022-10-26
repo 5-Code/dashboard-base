@@ -3,7 +3,7 @@
 namespace Habib\Dashboard\Models;
 
 use Habib\Dashboard\Models\Traits\PrefixModelTableTrait;
-use Habib\Dashboard\Models\MainModel as  Model;
+use Illuminate\Database\Eloquent\Model;
 
 class MainModel extends Model
 {
