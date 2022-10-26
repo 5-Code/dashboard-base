@@ -11,7 +11,9 @@ return new class extends Migration {
 
     public function up()
     {
-        Schema::create($this->getTablePrefix() . config('dashboard.ticket_messages.table_name', 'ticket_messages'),
+        Schema::create(
+            $this->getTablePrefix() .
+            config('dashboard.ticket_messages.table_name', 'ticket_messages'),
             function (Blueprint $table) {
                 $table->id();
                 $table->foreignIdFor($new = new Ticket, 'ticket_id')
@@ -26,7 +28,9 @@ return new class extends Migration {
 
     public function down()
     {
-        Schema::dropIfExists($this->getTablePrefix() . config('dashboard.ticket_messages.table_name',
-                'ticket_messages'));
+        Schema::dropIfExists(
+            $this->getTablePrefix() .
+            config('dashboard.ticket_messages.table_name', 'ticket_messages')
+        );
     }
 };

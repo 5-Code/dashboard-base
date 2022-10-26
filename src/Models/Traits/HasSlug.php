@@ -10,20 +10,10 @@ trait HasSlug
     public static function bootHasSlug(): void
     {
         static::creating(static function (self $model) {
-            $model->slug ??= null;
+            if ($model->slug) {
+                $model->sluggerByLocals($model->toArray());
+            }
         });
-    }
-
-    public function initializeHasSlug(): void
-    {
-        if (!$this->hasCast('slug')) {
-            $this->mergeCasts([
-                'slug' => SlugCast::class
-            ]);
-        }
-        if (!$this->isFillable('slug')) {
-            $this->mergeFillable(['slug']);
-        }
     }
 
     /**
@@ -41,6 +31,18 @@ trait HasSlug
         }
         $this->setAttribute($slugKey, $slug);
         return $this;
+    }
+
+    public function initializeHasSlug(): void
+    {
+        if (!$this->hasCast('slug')) {
+            $this->mergeCasts([
+                'slug' => SlugCast::class
+            ]);
+        }
+        if (!$this->isFillable('slug')) {
+            $this->mergeFillable(['slug']);
+        }
     }
 
     /**
