@@ -36,14 +36,15 @@
         "tanmuhittin/laravel-google-translate": "*",
         "realrashid/sweet-alert": "^5",
         "doctrine/dbal": "*",
-        "intervention/image": "^3.0.0-alpha.5",
         "stevebauman/location": "^6",
         "spatie/laravel-searchable": "^1.11",
         "ext-fileinfo": "*",
         "madeitbelgium/seo-analyzer": "^0.7.3",
-        "spatie/image-optimizer": "^1",
+        "spatie/laravel-medialibrary": "^10.6",
         "barryvdh/laravel-debugbar": "*",
-        "laravel/telescope": "*"
+        "laravel/telescope": "*",
+        "ext-dom": "*",
+        "ext-libxml": "*"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",

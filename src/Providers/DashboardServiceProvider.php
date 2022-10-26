@@ -106,8 +106,10 @@ class DashboardServiceProvider extends ServiceProvider
                 $databaseDriver = config("database.connections.{$database}.driver");
 
                 $localeColumn = match ($databaseDriver) {
-                    'pgsql' => $localeColumn->storedAs("($columnName ->> '$locale')"),
-                    'mysql' => $localeColumn->storedAs("json_unquote(JSON_EXTRACT($columnName,'$.$locale'))")(),
+                    'pgsql' => $localeColumn->storedAs("($columnName ->>'{$locale}')"),
+                    'mysql' => $localeColumn->storedAs(
+                        "json_unquote(JSON_EXTRACT($columnName,'$.{$locale}'))"
+                    ),
                     default => $localeColumn,
                 };
 

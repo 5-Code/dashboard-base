@@ -26,6 +26,15 @@ class Faq extends Model
         'status' => 'boolean',
     ];
 
+    protected $dispatchesEvents = [
+        'creating' => \Habib\Dashboard\Events\Faq\FaqCreatingEvent::class,
+        'updating' => \Habib\Dashboard\Events\Faq\FaqUpdatingEvent::class,
+        'deleting' => \Habib\Dashboard\Events\Faq\FaqDeletingEvent::class,
+        'created' => \Habib\Dashboard\Events\Faq\FaqCreatedEvent::class,
+        'updated' => \Habib\Dashboard\Events\Faq\FaqUpdatedEvent::class,
+        'deleted' => \Habib\Dashboard\Events\Faq\FaqDeletedEvent::class,
+    ];
+
     /**
      * @return MorphTo
      */

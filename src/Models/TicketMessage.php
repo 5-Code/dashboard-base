@@ -20,6 +20,15 @@ class TicketMessage extends Model
         'ticket_id',
     ];
 
+    protected $dispatchesEvents = [
+        'creating' => \Habib\Dashboard\Events\TicketMessage\TicketMessageCreatingEvent::class,
+        'updating' => \Habib\Dashboard\Events\TicketMessage\TicketMessageUpdatingEvent::class,
+        'deleting' => \Habib\Dashboard\Events\TicketMessage\TicketMessageDeletingEvent::class,
+        'created' => \Habib\Dashboard\Events\TicketMessage\TicketMessageCreatedEvent::class,
+        'updated' => \Habib\Dashboard\Events\TicketMessage\TicketMessageUpdatedEvent::class,
+        'deleted' => \Habib\Dashboard\Events\TicketMessage\TicketMessageDeletedEvent::class,
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */

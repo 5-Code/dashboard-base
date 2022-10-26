@@ -8,8 +8,12 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 if (!function_exists('createSlug')) {
-//    function createSlug(?string $string): array|string|null { return preg_replace('/[^A-Za-z0-9-]+/', '-', $string); }
-    function createSlug(?string $string, $separator = '-'): array|string|null
+    /**
+     * @param string|null $string
+     * @param string $separator
+     * @return array|string|null
+     */
+    function createSlug(?string $string, string $separator = '-'): array|string|null
     {
         if (is_null($string)) {
             return "";
@@ -25,8 +29,11 @@ if (!function_exists('createSlug')) {
         // Make alphanumeric (removes all other characters)
         // this makes the string safe especially when used as a part of a URL
         // this keeps latin characters and arabic charactrs as well
-        $string = preg_replace("/[^a-z0-9_\s\-اآؤئبپتثجچحخدذرزژسشصضطظعغفقكکگلمنوةيإأۀءهی۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩]#u/", "",
-            $string);
+        $string = preg_replace(
+            "/[^a-z0-9_\s\-اآؤئبپتثجچحخدذرزژسشصضطظعغفقكکگلمنوةيإأۀءهی۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩]#u/",
+            "",
+            $string
+        );
 
         // Remove multiple dashes or whitespaces
         $string = preg_replace("/[\s-]+/", " ", $string);

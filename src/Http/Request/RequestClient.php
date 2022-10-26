@@ -1,6 +1,6 @@
 <?php
 
-namespace Habib\Dashboard\Http\Requests;
+namespace Habib\Dashboard\Http\Request;
 
 use Exception;
 use Illuminate\Http\Request;

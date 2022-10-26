@@ -2,7 +2,7 @@
 
 namespace Habib\Dashboard\Helpers;
 
-use Habib\Dashboard\Http\Requests\RequestClient;
+use Habib\Dashboard\Http\Request\RequestClient;
 use Habib\Dashboard\Models\Visitor;
 use Illuminate\Http\Request;
 

@@ -56,7 +56,7 @@ trait MediaTraits
 
     /**
      * @param Media $media
-     * @return Media|bool
+     * @return Media
      */
-    abstract public function attachMedia(Media $media): Media|bool;
+    abstract public function attachMedia(Media $media): Media;
 }

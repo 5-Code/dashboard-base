@@ -35,6 +35,15 @@ class Ticket extends Model
         'details' => JsonCast::class,
     ];
 
+    protected $dispatchesEvents = [
+        'creating' => \Habib\Dashboard\Events\Ticket\TicketCreatingEvent::class,
+        'updating' => \Habib\Dashboard\Events\Ticket\TicketUpdatingEvent::class,
+        'deleting' => \Habib\Dashboard\Events\Ticket\TicketDeletingEvent::class,
+        'created' => \Habib\Dashboard\Events\Ticket\TicketCreatedEvent::class,
+        'updated' => \Habib\Dashboard\Events\Ticket\TicketUpdatedEvent::class,
+        'deleted' => \Habib\Dashboard\Events\Ticket\TicketDeletedEvent::class,
+    ];
+
     public function owner()
     {
         return $this->morphTo();

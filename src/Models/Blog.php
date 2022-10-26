@@ -3,19 +3,20 @@
 namespace Habib\Dashboard\Models;
 
 use Habib\Dashboard\Casts\JsonCast;
+use Habib\Dashboard\Events\Blog\BlogCreatedEvent;
+use Habib\Dashboard\Events\Blog\BlogCreatingEvent;
+use Habib\Dashboard\Events\Blog\BlogDeletedEvent;
+use Habib\Dashboard\Events\Blog\BlogDeletingEvent;
+use Habib\Dashboard\Events\Blog\BlogUpdatedEvent;
+use Habib\Dashboard\Events\Blog\BlogUpdatingEvent;
 use Habib\Dashboard\Models\Traits\HasOwner;
 use Habib\Dashboard\Models\Traits\HasSlug;
-use Habib\Dashboard\Models\Traits\MediaImageTrait;
-use Habib\Dashboard\Models\Traits\MediaModelsTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Blog extends Model
 {
     use HasOwner, HasSlug;
-    use MediaImageTrait{
-        MediaImageTrait::attachMedia as attachMediaImage;
-    }
 
     protected $fillable = [
         'title',
@@ -30,6 +31,15 @@ class Blog extends Model
         'slug' => JsonCast::class,
         'description' => JsonCast::class,
         'status' => 'boolean',
+    ];
+
+    protected $dispatchesEvents = [
+        'creating' => BlogCreatingEvent::class,
+        'updating' => BlogUpdatingEvent::class,
+        'deleting' => BlogDeletingEvent::class,
+        'created' => BlogCreatedEvent::class,
+        'updated' => BlogUpdatedEvent::class,
+        'deleted' => BlogDeletedEvent::class,
     ];
 
     /**

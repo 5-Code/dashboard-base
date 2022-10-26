@@ -24,6 +24,15 @@ class Contact extends Model
         'details' => JsonCast::class,
     ];
 
+    protected $dispatchesEvents = [
+        'creating' => \Habib\Dashboard\Events\Contact\ContactCreatingEvent::class,
+        'updating' => \Habib\Dashboard\Events\Contact\ContactUpdatingEvent::class,
+        'deleting' => \Habib\Dashboard\Events\Contact\ContactDeletingEvent::class,
+        'created' => \Habib\Dashboard\Events\Contact\ContactCreatedEvent::class,
+        'updated' => \Habib\Dashboard\Events\Contact\ContactUpdatedEvent::class,
+        'deleted' => \Habib\Dashboard\Events\Contact\ContactDeletedEvent::class,
+    ];
+
     /**
      * @return MorphTo
      */

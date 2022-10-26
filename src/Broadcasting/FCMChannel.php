@@ -47,6 +47,9 @@ class FCMChannel
             ], $optionsNotification),
         ], $options));
 
+        if (blank($data['registration_ids'])) {
+            return;
+        }
 
         return Http::withHeaders(['Authorization' => "key={$serverKey}"])
             ->withoutVerifying()

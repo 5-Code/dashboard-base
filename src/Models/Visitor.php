@@ -23,6 +23,15 @@ class Visitor extends Model
         'user' => 'string',
     ];
 
+    protected $dispatchesEvents = [
+        'creating' => \Habib\Dashboard\Events\Visitor\VisitorCreatingEvent::class,
+        'updating' => \Habib\Dashboard\Events\Visitor\VisitorUpdatingEvent::class,
+        'deleting' => \Habib\Dashboard\Events\Visitor\VisitorDeletingEvent::class,
+        'created' => \Habib\Dashboard\Events\Visitor\VisitorCreatedEvent::class,
+        'updated' => \Habib\Dashboard\Events\Visitor\VisitorUpdatedEvent::class,
+        'deleted' => \Habib\Dashboard\Events\Visitor\VisitorDeletedEvent::class,
+    ];
+
     public function user()
     {
         return $this->morphTo();
