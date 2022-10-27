@@ -8,7 +8,7 @@ trait HasOwner
     {
         static::creating(static function (self $model) {
             if (auth()->check()) {
-                $model->owenr_id ??= auth()->id();
+                $model->owner_id ??= auth()->id();
                 $model->owner_type ??= auth()->user()?->getMorphClass();
             }
         });
