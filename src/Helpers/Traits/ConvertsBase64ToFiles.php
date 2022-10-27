@@ -26,7 +26,7 @@ trait ConvertsBase64ToFiles
             rescue(function () use ($key, $filename) {
                 $base64Contents = $this->input($key);
 
-                if (!$base64Contents) {
+                if (!$base64Contents || $base64Contents instanceof UploadedFile) {
                     return;
                 }
 
