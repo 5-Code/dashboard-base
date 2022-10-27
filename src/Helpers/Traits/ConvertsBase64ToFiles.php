@@ -31,7 +31,7 @@ trait ConvertsBase64ToFiles
                 }
 
                 if (Str::startsWith($base64Contents, 'http')) {
-                    $base64Contents = file_get_contents($base64Contents);
+                    $base64Contents = 'data:image/jpg;base64,' . base64_encode($base64Contents);
                 }
 
                 // Generate a temporary path to store the Base64 contents
@@ -59,6 +59,7 @@ trait ConvertsBase64ToFiles
                 $files = $this->uploadFilesBag()->all();
                 Arr::set($files, $key, $uploadedFile);
                 $this->uploadFilesBag()->replace($files);
+                $this->request->set($key, $uploadedFile);
             }, null, false);
         });
     }
