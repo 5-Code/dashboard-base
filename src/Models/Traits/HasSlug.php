@@ -10,38 +10,56 @@ trait HasSlug
     public static function bootHasSlug(): void
     {
         static::creating(static function (self $model) {
-            if (!$model->hasAttributeMutator('slug')) {
+            if (!$model->hasAttributeMutator($model->getSlugName())) {
                 $model->sluggerByLocals($model->toArray());
             }
         });
     }
 
     /**
-     * @param array $data
-     * @param string $key
-     * @param string $slugKey
+     * @return string
+     */
+    public function getSlugName(): string
+    {
+        return 'slug';
+    }
+
+    /**
+     * @param array|null $data
+     * @param string|null $key
+     * @param string|null $slugName
      * @return $this
      */
-    public function sluggerByLocals(array $data, string $key = 'name', string $slugKey = 'slug'): static
+    public function sluggerByLocals(array $data = null, ?string $key = null, ?string $slugName = null): static
     {
+        $key ??= $this->getSlugKey();
+        $slugName ??= $this->getSlugName();
         $data ??= $this->getAttribute($key) ?? [];
         $slug = [];
         foreach (locals() as $local) {
-            $slug[$local] = Slugger::new()->slug($this, "{$slugKey}->{$local}", $data[$key][$local]);
+            $slug[$local] = Slugger::new()->slug($this, "{$slugName}->{$local}", $data[$key][$local]);
         }
-        $this->setAttribute($slugKey, $slug);
+        $this->setAttribute($slugName, $slug);
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlugKey(): string
+    {
+        return 'name';
     }
 
     public function initializeHasSlug(): void
     {
-        if (!$this->hasCast('slug')) {
+        if (!$this->hasCast($this->getSlugName())) {
             $this->mergeCasts([
-                'slug' => SlugCast::class
+                $this->getSlugName() => SlugCast::class
             ]);
         }
-        if (!$this->isFillable('slug')) {
-            $this->mergeFillable(['slug']);
+        if (!$this->isFillable($this->getSlugName())) {
+            $this->mergeFillable([$this->getSlugName()]);
         }
     }
 
