@@ -272,7 +272,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
                 return false;
             }
 
-            return $saved->tap(fn($model) => $this->attach($saved, $data));
+            return tap($saved,fn($model) => $this->attach($saved, $data));
         });
     }
 
@@ -298,7 +298,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
                 return false;
             }
 
-            return $model->tap(fn($model) => $this->attach($model, $data));
+            return tap($model,fn($model) => $this->attach($model, $data));
         });
     }
 
