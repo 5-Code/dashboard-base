@@ -11,31 +11,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 trait ConvertsBase64ToFiles
 {
-    protected function base64FileKeys(): array
-    {
-        return [];
-    }
-
-    /**
-     * Helper method to get the body parameters bag.
-     *
-     * @return \Symfony\Component\HttpFoundation\ParameterBag
-     */
-    private function bodyParametersBag(): ParameterBag
-    {
-        return $this->request;
-    }
-
-    /**
-     * Helper method to get the uploaded files bag.
-     *
-     * @return FileBag
-     */
-    private function uploadFilesBag(): FileBag
-    {
-        return $this->files;
-    }
-
     /**
      * Pulls the Base64 contents for each image key and creates
      * an UploadedFile instance from it and sets it on the
@@ -53,6 +28,10 @@ trait ConvertsBase64ToFiles
 
                 if (!$base64Contents) {
                     return;
+                }
+
+                if (Str::startsWith($base64Contents, 'http')) {
+                    $base64Contents = file_get_contents($base64Contents);
                 }
 
                 // Generate a temporary path to store the Base64 contents
@@ -82,5 +61,30 @@ trait ConvertsBase64ToFiles
                 $this->uploadFilesBag()->replace($files);
             }, null, false);
         });
+    }
+
+    protected function base64FileKeys(): array
+    {
+        return [];
+    }
+
+    /**
+     * Helper method to get the body parameters bag.
+     *
+     * @return ParameterBag
+     */
+    private function bodyParametersBag(): ParameterBag
+    {
+        return $this->request;
+    }
+
+    /**
+     * Helper method to get the uploaded files bag.
+     *
+     * @return FileBag
+     */
+    private function uploadFilesBag(): FileBag
+    {
+        return $this->files;
     }
 }
