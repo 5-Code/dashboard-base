@@ -253,14 +253,6 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param  FormRequest  $request
-     * @return array
-     */
-    abstract public function updateRequestRules(FormRequest $request): array;
-
-    abstract public function storeRequestRules(FormRequest $request): array;
-
-    /**
      * @param  array  $data
      * @return Model|bool
      */
