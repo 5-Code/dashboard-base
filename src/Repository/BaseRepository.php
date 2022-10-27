@@ -3,12 +3,10 @@
 namespace Habib\Dashboard\Repository;
 
 use DB;
-use Habib\Dashboard\Helpers\Slugger;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Psr\Container\ContainerExceptionInterface;
@@ -31,7 +29,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     protected Request $request;
 
     /**
-     * @param  T  $model
+     * @param T $model
      */
     public function __construct(Model $model)
     {
@@ -47,7 +45,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
      */
     public function all()
     {
-        $query = $this->getModel()->query()->when($this->request->get('limit'), fn ($q, $v) => $q->limit($v));
+        $query = $this->getModel()->query()->when($this->request->get('limit'), fn($q, $v) => $q->limit($v));
 
         return $this->applyFilter($query)->get();
     }
@@ -69,8 +67,8 @@ abstract class BaseRepository implements BaseRepositoryInterface
             $name = $filter[0];
             $alias = $filter[2] ?? $name;
             $value = $this->getRequest()->get($alias);
-            $operator = $this->getRequest()->get(str_replace('.', '_', $alias).'_op', $filter[1] ?? '=');
-            if (is_null($value) && ! in_array($operator, ['nullable', 'notNullable'])) {
+            $operator = $this->getRequest()->get(str_replace('.', '_', $alias) . '_op', $filter[1] ?? '=');
+            if (is_null($value) && !in_array($operator, ['nullable', 'notNullable'])) {
                 continue;
             }
 
@@ -79,7 +77,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
                 $name = end($param);
                 $relation = implode('.', array_slice($param, 0, -1));
 
-                $query->whereHas($relation, fn ($q) => $this->filter($q, $value, $name, $operator));
+                $query->whereHas($relation, fn($q) => $this->filter($q, $value, $name, $operator));
             } else {
                 $name = "{$this->getModel()->getTable()}.{$name}";
                 $this->filter($query, $value, $name, $operator);
@@ -134,7 +132,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param  array  $with
+     * @param array $with
      */
     public function setWith(array $with): void
     {
@@ -142,12 +140,14 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param  int|int[]|Model  $model
+     * @param int|int[]|Model $model
      * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function destroy(int|array|Model $model): bool
     {
-        if (! $model = $this->find($model)) {
+        if (!$model = $this->find($model)) {
             return false;
         }
 
@@ -155,9 +155,9 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param  int|array|Model|string  $model
-     * @param  callable|null  $callable
-     * @param  bool  $deleted
+     * @param int|array|Model|string $model
+     * @param callable|null $callable
+     * @param bool $deleted
      * @return Builder|Builder[]|Collection|Model|object|null
      *
      * @throws ContainerExceptionInterface
@@ -183,11 +183,11 @@ abstract class BaseRepository implements BaseRepositoryInterface
             return $query->findMany($model);
         }
 
-        if (! is_numeric($model)) {
+        if (!is_numeric($model)) {
             $query->getModel()->setKeyName($this->request->get('filed_name', 'slug'));
 
-            return $query->where(fn ($q) => $q->where($query->getModel()->getKeyName().'->ar', $model)
-                ->orWhere($query->getModel()->getKeyName().'->en', $model))
+            return $query->where(fn($q) => $q->where($query->getModel()->getKeyName() . '->ar', $model)
+                ->orWhere($query->getModel()->getKeyName() . '->en', $model))
                 ->first();
         }
 
@@ -195,12 +195,14 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param  int|Model  $model
+     * @param int|Model $model
      * @return Model|bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function delete(int|Model $model): Model|bool
     {
-        if (! $model = $this->find($model)) {
+        if (!$model = $this->find($model)) {
             return false;
         }
 
@@ -208,12 +210,14 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param  int|Model  $model
+     * @param int|Model $model
      * @return Model|bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function forceDelete(int|Model $model): Model|bool
     {
-        if (! $model = $this->find($model)) {
+        if (!$model = $this->find($model)) {
             return false;
         }
 
@@ -221,12 +225,14 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param  int|Model  $model
+     * @param int|Model $model
      * @return Model|bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function restore(int|Model $model): Model|bool
     {
-        if (! $model = $this->find($model, deleted: true)) {
+        if (!$model = $this->find($model, deleted: true)) {
             return false;
         }
 
@@ -253,7 +259,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param  array  $data
+     * @param array $data
      * @return Model|bool
      */
     public function store(array $data): bool|Model
@@ -262,13 +268,11 @@ abstract class BaseRepository implements BaseRepositoryInterface
             // changes something
             $this->beforeCreate($data);
 
-            if (! $saved = $this->getModel()->create($data)) {
+            if (!$saved = $this->getModel()->create($data)) {
                 return false;
             }
 
-            $this->attach($saved, $data);
-
-            return $saved;
+            return $saved->tap(fn($model) => $this->attach($saved, $data));
         });
     }
 
@@ -277,27 +281,24 @@ abstract class BaseRepository implements BaseRepositoryInterface
     abstract public function attach(Model $model, array &$data);
 
     /**
-     * @param  int|Model  $model
-     * @param  array  $data
+     * @param int|Model $model
+     * @param array $data
      * @return Model|bool
      */
     public function update(int|Model $model, array $data): bool|Model
     {
         return DB::transaction(function () use ($model, $data) {
-            if (! $model = $this->find($model)) {
+            if (!$model = $this->find($model)) {
                 return false;
             }
-            // changes something
 
             $this->beforeUpdate($model, $data);
 
-            if (! $model->update($data)) {
+            if (!$model->update($data)) {
                 return false;
             }
-            // sync
-            $this->attach($model, $data);
 
-            return $model;
+            return $model->tap(fn($model) => $this->attach($model, $data));
         });
     }
 
@@ -317,7 +318,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     /**
      * @return Builder
      */
-    public function datatableQuery(): Builder
+    public function getQueryFiltered(): Builder
     {
         return $this->applyFilter($this->getQuery());
     }
@@ -328,22 +329,6 @@ abstract class BaseRepository implements BaseRepositoryInterface
     public function getQuery(): Builder
     {
         return $this->getModel()->query();
-    }
-
-    public function localsRule(): string
-    {
-        return 'array:'.implode(',', locals());
-    }
-
-    public function slugs(array|string $value, array &$data)
-    {
-        if (is_array($value)) {
-            foreach ($value as $k => $v) {
-                $data['slug'][$k] = Slugger::new()->slug($this->getModel(), "slug->$k", $v);
-            }
-        } else {
-            $data['slug'] = Slugger::new()->slug($this->getModel(), 'slug', $value);
-        }
     }
 
     public function new(array $attributes = [])
