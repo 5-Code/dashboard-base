@@ -11,6 +11,7 @@ class VisitorMiddleware
     public function handle(Request $request, Closure $next)
     {
         Helper::visitor($request);
+
         return $next($request);
     }
 }

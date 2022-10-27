@@ -5,12 +5,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     use MigrateHelperTrait;
 
     public function up()
     {
-        Schema::create($this->getTablePrefix() . config('dashboard.tickets.table_name', 'tickets'),
+        Schema::create($this->getTablePrefix().config('dashboard.tickets.table_name', 'tickets'),
             function (Blueprint $table) {
                 $table->id();
                 $table->string('title');
@@ -28,6 +29,6 @@ return new class extends Migration {
 
     public function down()
     {
-        Schema::dropIfExists($this->getTablePrefix() . config('dashboard.tickets.table_name', 'tickets'));
+        Schema::dropIfExists($this->getTablePrefix().config('dashboard.tickets.table_name', 'tickets'));
     }
 };

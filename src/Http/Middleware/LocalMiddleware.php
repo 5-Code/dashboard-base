@@ -25,7 +25,7 @@ class LocalMiddleware
             );
         }
 
-        if (!in_array($locale, config('app.locales'))) {
+        if (! in_array($locale, config('app.locales'))) {
             $locale = config('app.fallback_locale');
         }
 
@@ -34,7 +34,7 @@ class LocalMiddleware
             $app->setLocale($locale);
         }
 
-        if (!$request->is('api/*')) {
+        if (! $request->is('api/*')) {
             $request->session()->put('locale', $locale);
         }
 

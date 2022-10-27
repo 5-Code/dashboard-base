@@ -11,7 +11,7 @@ class ChangePasswordAction implements ActionInterface
     public static $callback;
 
     /**
-     * @param Authenticatable $authenticatable
+     * @param  Authenticatable  $authenticatable
      */
     public function __construct(
         public Authenticatable $authenticatable
@@ -19,11 +19,11 @@ class ChangePasswordAction implements ActionInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function handle(array $data)
     {
-        if (!Hash::check($data['old_password'], $this->authenticatable->getAuthPassword())) {
+        if (! Hash::check($data['old_password'], $this->authenticatable->getAuthPassword())) {
             return false;
         }
 
@@ -35,6 +35,7 @@ class ChangePasswordAction implements ActionInterface
         if ($data['password_hashed'] ?? false) {
             $password = Hash::make($data['password']);
         }
+
         return $this->authenticatable->update(compact('password'));
     }
 }

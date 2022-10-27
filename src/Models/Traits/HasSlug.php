@@ -10,7 +10,7 @@ trait HasSlug
     public static function bootHasSlug(): void
     {
         static::creating(static function (self $model) {
-            if (!$model->hasAttributeMutator($model->getSlugName())) {
+            if (! $model->hasAttributeMutator($model->getSlugName())) {
                 $model->sluggerByLocals($model->toArray());
             }
         });
@@ -25,9 +25,9 @@ trait HasSlug
     }
 
     /**
-     * @param array|null $data
-     * @param string|null $key
-     * @param string|null $slugName
+     * @param  array|null  $data
+     * @param  string|null  $key
+     * @param  string|null  $slugName
      * @return $this
      */
     public function sluggerByLocals(array $data = null, ?string $key = null, ?string $slugName = null): static
@@ -40,6 +40,7 @@ trait HasSlug
             $slug[$local] = Slugger::new()->slug($this, "{$slugName}->{$local}", $data[$key][$local]);
         }
         $this->setAttribute($slugName, $slug);
+
         return $this;
     }
 
@@ -53,20 +54,20 @@ trait HasSlug
 
     public function initializeHasSlug(): void
     {
-        if (!$this->hasCast($this->getSlugName())) {
+        if (! $this->hasCast($this->getSlugName())) {
             $this->mergeCasts([
-                $this->getSlugName() => SlugCast::class
+                $this->getSlugName() => SlugCast::class,
             ]);
         }
-        if (!$this->isFillable($this->getSlugName())) {
+        if (! $this->isFillable($this->getSlugName())) {
             $this->mergeFillable([$this->getSlugName()]);
         }
     }
 
     /**
-     * @param array $data
-     * @param string $key
-     * @param string $slugKey
+     * @param  array  $data
+     * @param  string  $key
+     * @param  string  $slugKey
      * @return $this
      */
     public function slugger(array $data, string $key = 'name', string $slugKey = 'slug'): static
@@ -76,6 +77,7 @@ trait HasSlug
         $slug = Slugger::new()->slug($this, $slugKey, $data[$key]);
 
         $this->setAttribute($slugKey, $slug);
+
         return $this;
     }
 }

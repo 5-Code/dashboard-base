@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class HashCast
- * @package App\Casts
  */
 class HashCast implements CastsInboundAttributes
 {
@@ -21,7 +20,7 @@ class HashCast implements CastsInboundAttributes
     /**
      * Create a new cast class instance.
      *
-     * @param string|null $algorithm
+     * @param  string|null  $algorithm
      * @return void
      */
     public function __construct(?string $algorithm = null)
@@ -32,10 +31,10 @@ class HashCast implements CastsInboundAttributes
     /**
      * Prepare the given value for storage.
      *
-     * @param Model $model
-     * @param string $key
-     * @param string $value
-     * @param array $attributes
+     * @param  Model  $model
+     * @param  string  $key
+     * @param  string  $value
+     * @param  array  $attributes
      * @return string
      */
     public function set($model, $key, $value, $attributes)

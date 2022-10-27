@@ -12,7 +12,7 @@ class DeleteFaqAction implements ActionInterface
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      * @return bool|null
      */
     public function handle(array $data = [])

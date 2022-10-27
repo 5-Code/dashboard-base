@@ -20,15 +20,18 @@ use Psr\Container\NotFoundExceptionInterface;
 abstract class BaseRepository implements BaseRepositoryInterface
 {
     protected array $filters = ['id'];
+
     protected array $with = [];
+
     /**
      * @var T
      */
     protected Model $model;
+
     protected Request $request;
 
     /**
-     * @param T $model
+     * @param  T  $model
      */
     public function __construct(Model $model)
     {
@@ -38,12 +41,14 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     /**
      * @return Builder|Collection
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public function all()
     {
-        $query = $this->getModel()->query()->when($this->request->get('limit'), fn($q, $v) => $q->limit($v));
+        $query = $this->getModel()->query()->when($this->request->get('limit'), fn ($q, $v) => $q->limit($v));
+
         return $this->applyFilter($query)->get();
     }
 
@@ -64,8 +69,8 @@ abstract class BaseRepository implements BaseRepositoryInterface
             $name = $filter[0];
             $alias = $filter[2] ?? $name;
             $value = $this->getRequest()->get($alias);
-            $operator = $this->getRequest()->get(str_replace('.', '_', $alias) . '_op', $filter[1] ?? '=');
-            if (is_null($value) && !in_array($operator, ['nullable', 'notNullable'])) {
+            $operator = $this->getRequest()->get(str_replace('.', '_', $alias).'_op', $filter[1] ?? '=');
+            if (is_null($value) && ! in_array($operator, ['nullable', 'notNullable'])) {
                 continue;
             }
 
@@ -74,7 +79,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
                 $name = end($param);
                 $relation = implode('.', array_slice($param, 0, -1));
 
-                $query->whereHas($relation, fn($q) => $this->filter($q, $value, $name, $operator));
+                $query->whereHas($relation, fn ($q) => $this->filter($q, $value, $name, $operator));
             } else {
                 $name = "{$this->getModel()->getTable()}.{$name}";
                 $this->filter($query, $value, $name, $operator);
@@ -129,7 +134,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param array $with
+     * @param  array  $with
      */
     public function setWith(array $with): void
     {
@@ -137,12 +142,12 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param int|int[]|Model $model
+     * @param  int|int[]|Model  $model
      * @return bool
      */
     public function destroy(int|array|Model $model): bool
     {
-        if (!$model = $this->find($model)) {
+        if (! $model = $this->find($model)) {
             return false;
         }
 
@@ -150,10 +155,11 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param int|array|Model|string $model
-     * @param callable|null $callable
-     * @param bool $deleted
+     * @param  int|array|Model|string  $model
+     * @param  callable|null  $callable
+     * @param  bool  $deleted
      * @return Builder|Builder[]|Collection|Model|object|null
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -177,10 +183,11 @@ abstract class BaseRepository implements BaseRepositoryInterface
             return $query->findMany($model);
         }
 
-        if (!is_numeric($model)) {
+        if (! is_numeric($model)) {
             $query->getModel()->setKeyName($this->request->get('filed_name', 'slug'));
-            return $query->where(fn($q) => $q->where($query->getModel()->getKeyName() . '->ar', $model)
-                ->orWhere($query->getModel()->getKeyName() . '->en', $model))
+
+            return $query->where(fn ($q) => $q->where($query->getModel()->getKeyName().'->ar', $model)
+                ->orWhere($query->getModel()->getKeyName().'->en', $model))
                 ->first();
         }
 
@@ -188,12 +195,12 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param int|Model $model
+     * @param  int|Model  $model
      * @return Model|bool
      */
     public function delete(int|Model $model): Model|bool
     {
-        if (!$model = $this->find($model)) {
+        if (! $model = $this->find($model)) {
             return false;
         }
 
@@ -201,12 +208,12 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param int|Model $model
+     * @param  int|Model  $model
      * @return Model|bool
      */
     public function forceDelete(int|Model $model): Model|bool
     {
-        if (!$model = $this->find($model)) {
+        if (! $model = $this->find($model)) {
             return false;
         }
 
@@ -214,12 +221,12 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param int|Model $model
+     * @param  int|Model  $model
      * @return Model|bool
      */
     public function restore(int|Model $model): Model|bool
     {
-        if (!$model = $this->find($model, deleted: true)) {
+        if (! $model = $this->find($model, deleted: true)) {
             return false;
         }
 
@@ -228,6 +235,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     /**
      * @return LengthAwarePaginator
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -235,7 +243,6 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         return $this->applyFilter($this->getModel()->query())->paginate($this->request->get('limit', 15));
     }
-
 
     /**
      * @return array|LengthAwarePaginator
@@ -246,7 +253,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param FormRequest $request
+     * @param  FormRequest  $request
      * @return array
      */
     abstract public function updateRequestRules(FormRequest $request): array;
@@ -254,17 +261,16 @@ abstract class BaseRepository implements BaseRepositoryInterface
     abstract public function storeRequestRules(FormRequest $request): array;
 
     /**
-     * @param array $data
+     * @param  array  $data
      * @return Model|bool
      */
     public function store(array $data): bool|Model
     {
-
         return DB::transaction(function () use ($data) {
             // changes something
             $this->beforeCreate($data);
 
-            if (!$saved = $this->getModel()->create($data)) {
+            if (! $saved = $this->getModel()->create($data)) {
                 return false;
             }
 
@@ -279,21 +285,21 @@ abstract class BaseRepository implements BaseRepositoryInterface
     abstract public function attach(Model $model, array &$data);
 
     /**
-     * @param int|Model $model
-     * @param array $data
+     * @param  int|Model  $model
+     * @param  array  $data
      * @return Model|bool
      */
     public function update(int|Model $model, array $data): bool|Model
     {
         return DB::transaction(function () use ($model, $data) {
-            if (!$model = $this->find($model)) {
+            if (! $model = $this->find($model)) {
                 return false;
             }
             // changes something
 
             $this->beforeUpdate($model, $data);
 
-            if (!$model->update($data)) {
+            if (! $model->update($data)) {
                 return false;
             }
             // sync
@@ -334,7 +340,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     public function localsRule(): string
     {
-        return 'array:' . implode(',', locals());
+        return 'array:'.implode(',', locals());
     }
 
     public function slugs(array|string $value, array &$data)

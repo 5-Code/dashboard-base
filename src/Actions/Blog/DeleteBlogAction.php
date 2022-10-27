@@ -3,7 +3,6 @@
 namespace Habib\Dashboard\Actions\Blog;
 
 use Habib\Dashboard\Actions\ActionInterface;
-use Habib\Dashboard\Actions\DeleteActionInterface;
 use Habib\Dashboard\Models\Blog;
 
 class DeleteBlogAction implements ActionInterface
@@ -13,7 +12,7 @@ class DeleteBlogAction implements ActionInterface
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      * @return bool|null
      */
     public function handle(array $data = [])

@@ -7,16 +7,16 @@ use Illuminate\Support\Str;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-if (!function_exists('createSlug')) {
+if (! function_exists('createSlug')) {
     /**
-     * @param string|null $string
-     * @param string $separator
+     * @param  string|null  $string
+     * @param  string  $separator
      * @return array|string|null
      */
     function createSlug(?string $string, string $separator = '-'): array|string|null
     {
         if (is_null($string)) {
-            return "";
+            return '';
         }
 
         // Remove spaces from the beginning and from the end of the string
@@ -24,33 +24,34 @@ if (!function_exists('createSlug')) {
 
         // Lower case everything
         // using mb_strtolower() function is important for non-Latin UTF-8 string | more info: https://www.php.net/manual/en/function.mb-strtolower.php
-        $string = mb_strtolower($string, "UTF-8");
+        $string = mb_strtolower($string, 'UTF-8');
 
         // Make alphanumeric (removes all other characters)
         // this makes the string safe especially when used as a part of a URL
         // this keeps latin characters and arabic charactrs as well
         $string = preg_replace(
             "/[^a-z0-9_\s\-اآؤئبپتثجچحخدذرزژسشصضطظعغفقكکگلمنوةيإأۀءهی۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩]#u/",
-            "",
+            '',
             $string
         );
 
         // Remove multiple dashes or whitespaces
-        $string = preg_replace("/[\s-]+/", " ", $string);
+        $string = preg_replace("/[\s-]+/", ' ', $string);
 
         // Convert whitespaces and underscore to the given separator
         return preg_replace("/[\s_]/", $separator, $string);
     }
 }
 
-if (!function_exists('setting')) {
+if (! function_exists('setting')) {
     /**
-     * @param string $name
-     * @param string $default
-     * @param string|null $type
-     * @param string|null $group_by
-     * @param string|null $locale
+     * @param  string  $name
+     * @param  string  $default
+     * @param  string|null  $type
+     * @param  string|null  $group_by
+     * @param  string|null  $locale
      * @return string
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \Psr\SimpleCache\InvalidArgumentException
@@ -62,7 +63,6 @@ if (!function_exists('setting')) {
         string $group_by = null,
         string $locale = null
     ): string {
-
         $locale = $locale ?? substr(app()->getLocale(), 0, 2);
         $type = $type ?? 'string';
         if (cache()->has('settings')) {
@@ -84,24 +84,23 @@ if (!function_exists('setting')) {
                 'type' => $type,
                 'locale' => $locale,
                 'value' => $default ?? $name,
-                'group_by' => $group_by
+                'group_by' => $group_by,
             ]
         )->value ?? $default;
     }
 }
 
-
-if (!function_exists('uploader')) {
+if (! function_exists('uploader')) {
     /**
      * @param $input
-     * @param string|null $folder
-     * @param array|null $validation
+     * @param  string|null  $folder
+     * @param  array|null  $validation
      * @return array|string
      */
     function uploader($input, string|null $folder = null, array|null $validation = null): array|string
     {
         $validation ??= [];
-        $folder ??= "";
+        $folder ??= '';
         $request = request();
         $files = [];
         if (is_array($input)) {
@@ -112,14 +111,15 @@ if (!function_exists('uploader')) {
                     $files[$key] = uploader($item, $folder, $validation);
                 }
             }
+
             return $files;
         }
         $isFile = $input instanceof UploadedFile;
         // remove any / char form var
         $path = rtrim($folder, '/');
-        $defaultDir = "uploads";
+        $defaultDir = 'uploads';
         // validate Image
-        if (!$isFile) {
+        if (! $isFile) {
             if (empty($validation)) {
                 $request->validate([$input => ['required', 'image', 'mimes:jpeg,jpg,png']]);
             } else {
@@ -133,17 +133,17 @@ if (!function_exists('uploader')) {
         // this line if true throw Exception 400 with errors
         if (blank($file->getClientOriginalExtension())) {
             response()->json([
-                "status" => false,
-                "errors" => [(is_string($input) ? $input : "file") => "file without Extension try by other way please ♥."]
+                'status' => false,
+                'errors' => [(is_string($input) ? $input : 'file') => 'file without Extension try by other way please ♥.'],
             ], 400)->send();
         }
 
-        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
+        $filename = Str::uuid().'.'.$file->getClientOriginalExtension();
 
         $disk = Storage::build([
             'driver' => 'local',
-            'root' => public_path((string)$defaultDir),
-            'url' => config('app.url') . "/{$defaultDir}",
+            'root' => public_path((string) $defaultDir),
+            'url' => config('app.url')."/{$defaultDir}",
             'visibility' => 'public',
             'throw' => false,
             'permissions' => [
@@ -164,17 +164,17 @@ if (!function_exists('uploader')) {
     }
 }
 
-if (!function_exists('locals')) {
+if (! function_exists('locals')) {
     /**
      * @return string[]
      */
     function locals(): array
     {
-        return config('app.locales', ['ar', 'en',]);
+        return config('app.locales', ['ar', 'en']);
     }
 }
 
-if (!function_exists('current_local')) {
+if (! function_exists('current_local')) {
     /**
      * @return string
      */
@@ -184,17 +184,17 @@ if (!function_exists('current_local')) {
     }
 }
 
-if (!function_exists('current_dir')) {
+if (! function_exists('current_dir')) {
     /**
      * @return string
      */
     function current_dir(): string
     {
-        return current_local() == "ar" ? 'rtl' : 'ltr';
+        return current_local() == 'ar' ? 'rtl' : 'ltr';
     }
 }
 
-if (!function_exists('default_time_zone')) {
+if (! function_exists('default_time_zone')) {
     /**
      * @return string
      */

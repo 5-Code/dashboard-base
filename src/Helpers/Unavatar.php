@@ -5,23 +5,37 @@ namespace Habib\Dashboard\Helpers;
 class Unavatar
 {
     public const PROVIDER_CLEARBIT = 'clearbit';
+
     public const PROVIDER_DEVIANTART = 'deviantart';
+
     public const PROVIDER_DRIBBBLE = 'dribbble';
+
     public const PROVIDER_DUCKDUCKGO = 'duckduckgo';
+
     public const PROVIDER_FACEBOOK = 'facebook';
+
     public const PROVIDER_GITHUB = 'github';
+
     public const PROVIDER_GRAVATAR = 'gravatar';
+
     public const PROVIDER_INSTAGRAM = 'instagram';
+
     public const PROVIDER_SOUNDCLOUD = 'soundcloud';
+
     public const PROVIDER_SUBSTACK = 'substack';
+
     public const PROVIDER_TELEGRAM = 'telegram';
+
     public const PROVIDER_TWITTER = 'twitter';
+
     public const PROVIDER_YOUTUBE = 'youtube';
 
     protected const BASE_URL = 'https://unavatar.now.sh';
 
     protected string $identifier;
+
     protected ?string $provider = null;
+
     protected ?string $fallback = null;
 
     public function __construct(string $identifier, ?string $provider = null)
@@ -120,13 +134,13 @@ class Unavatar
     public function toImg(array $attr = []): string
     {
         $attr = array_merge([
-            'alt' => implode(' ', array_filter([$this->identifier . '\'s', $this->provider, 'avatar'])),
+            'alt' => implode(' ', array_filter([$this->identifier.'\'s', $this->provider, 'avatar'])),
         ], $attr);
 
         $attr['src'] = $this->toUrl();
 
         return sprintf('<img %s />', implode(' ', array_map(
-            fn($k, $v) => sprintf('%s="%s"', $k, htmlspecialchars($v)),
+            fn ($k, $v) => sprintf('%s="%s"', $k, htmlspecialchars($v)),
             array_keys($attr),
             $attr
         )));
@@ -138,7 +152,7 @@ class Unavatar
             static::BASE_URL,
             $this->provider,
             urlencode($this->identifier),
-            ($this->fallback === null ? '' : '?fallback=' . urlencode($this->fallback)),
+            ($this->fallback === null ? '' : '?fallback='.urlencode($this->fallback)),
         ]));
     }
 

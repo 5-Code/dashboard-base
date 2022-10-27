@@ -14,6 +14,7 @@ trait RequestMethods
     public function authorize()
     {
         $this->removeNullFromRequest();
+
         return true;
     }
 
@@ -35,11 +36,11 @@ trait RequestMethods
     public function getPostMaxSize(): float|int
     {
         if (is_numeric($postMaxSize = ini_get('post_max_size'))) {
-            return (int)$postMaxSize;
+            return (int) $postMaxSize;
         }
 
         $metric = strtoupper(substr($postMaxSize, -1));
-        $postMaxSize = (int)$postMaxSize;
+        $postMaxSize = (int) $postMaxSize;
 
         return match ($metric) {
             'K' => $postMaxSize * 1024,
@@ -68,7 +69,7 @@ trait RequestMethods
     public function filesUpload(&$validated): void
     {
         foreach ($this->filesKeys ?? [] as $key) {
-            if (!$this->hasFile($key)) {
+            if (! $this->hasFile($key)) {
                 continue;
             }
 
@@ -81,13 +82,12 @@ trait RequestMethods
             } elseif ($this->hasFile($key)) {
                 $validated[$key] = uploader($this->file($key));
             }
-
         }
     }
 
     public function encryption(&$validated): void
     {
-        if (!property_exists($this, 'encryption')) {
+        if (! property_exists($this, 'encryption')) {
             return;
         }
 
@@ -98,5 +98,4 @@ trait RequestMethods
             }
         }
     }
-
 }

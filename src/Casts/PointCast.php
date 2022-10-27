@@ -8,13 +8,14 @@ class PointCast implements CastsAttributes
 {
     public function get($model, $key, $value, $attributes)
     {
-        if (!isset($attributes["{$key}_text"]) || !$attributes["{$key}_text"]) {
+        if (! isset($attributes["{$key}_text"]) || ! $attributes["{$key}_text"]) {
             return null;
         }
 
-        [$lat, $lng] = explode(" ", trim(str_replace('POINT', '', $attributes["{$key}_text"]), '()'));
+        [$lat, $lng] = explode(' ', trim(str_replace('POINT', '', $attributes["{$key}_text"]), '()'));
         $lng = floatval($lng);
         $lat = floatval($lat);
+
         return compact('lat', 'lng');
     }
 
@@ -35,7 +36,6 @@ class PointCast implements CastsAttributes
         }
 
         if (is_string($value)) {
-
             if (str_starts_with($value, 'POINT(')) {
                 return "SRID=4326;$value";
             }

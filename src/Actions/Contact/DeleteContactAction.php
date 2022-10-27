@@ -3,7 +3,6 @@
 namespace Habib\Dashboard\Actions\Contact;
 
 use Habib\Dashboard\Actions\ActionInterface;
-use Habib\Dashboard\Actions\DeleteActionInterface;
 use Habib\Dashboard\Models\Contact;
 
 class DeleteContactAction implements ActionInterface
@@ -13,7 +12,7 @@ class DeleteContactAction implements ActionInterface
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      * @return bool|null
      */
     public function handle(array $data = [])

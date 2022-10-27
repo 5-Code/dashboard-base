@@ -9,8 +9,8 @@ use Habib\Dashboard\Events\Visitor\VisitorDeletedEvent;
 use Habib\Dashboard\Events\Visitor\VisitorDeletingEvent;
 use Habib\Dashboard\Events\Visitor\VisitorUpdatedEvent;
 use Habib\Dashboard\Events\Visitor\VisitorUpdatingEvent;
-use Habib\Dashboard\Models\Traits\HasOwner;
 use Habib\Dashboard\Models\MainModel as  Model;
+use Habib\Dashboard\Models\Traits\HasOwner;
 
 class Visitor extends Model
 {

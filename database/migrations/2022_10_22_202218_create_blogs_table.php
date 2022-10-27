@@ -6,12 +6,13 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-return new class extends Migration {
+return new class extends Migration
+{
     use MigrateHelperTrait;
 
     public function up()
     {
-        Schema::create($this->getTablePrefix() . config('dashboard.blogs.table_name', 'blogs'),
+        Schema::create($this->getTablePrefix().config('dashboard.blogs.table_name', 'blogs'),
             function (Blueprint $table) {
                 $table->id();
                 $table->lang('title');
@@ -27,6 +28,6 @@ return new class extends Migration {
 
     public function down()
     {
-        Schema::dropIfExists($this->getTablePrefix() . config('dashboard.blogs.table_name', 'blogs'));
+        Schema::dropIfExists($this->getTablePrefix().config('dashboard.blogs.table_name', 'blogs'));
     }
 };

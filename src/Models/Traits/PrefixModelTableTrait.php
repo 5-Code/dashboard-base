@@ -10,7 +10,6 @@ trait PrefixModelTableTrait
 
         $table = parent::getTable();
 
-        return str_starts_with($table, $prefix) ? $table : $prefix . $table;
-
+        return str_starts_with($table, $prefix) ? $table : $prefix.$table;
     }
 }

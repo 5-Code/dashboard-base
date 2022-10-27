@@ -9,9 +9,9 @@ use Habib\Dashboard\Events\Blog\BlogDeletedEvent;
 use Habib\Dashboard\Events\Blog\BlogDeletingEvent;
 use Habib\Dashboard\Events\Blog\BlogUpdatedEvent;
 use Habib\Dashboard\Events\Blog\BlogUpdatingEvent;
+use Habib\Dashboard\Models\MainModel as  Model;
 use Habib\Dashboard\Models\Traits\HasOwner;
 use Habib\Dashboard\Models\Traits\HasSlug;
-use Habib\Dashboard\Models\MainModel as  Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -19,8 +19,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Blog extends Model implements HasMedia
 {
     use HasOwner, HasSlug;
-
     use InteractsWithMedia;
+
     protected $fillable = [
         'title',
         'slug',

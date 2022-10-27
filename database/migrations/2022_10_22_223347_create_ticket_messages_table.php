@@ -6,13 +6,14 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     use MigrateHelperTrait;
 
     public function up()
     {
         Schema::create(
-            $this->getTablePrefix() .
+            $this->getTablePrefix().
             config('dashboard.ticket_messages.table_name', 'ticket_messages'),
             function (Blueprint $table) {
                 $table->id();
@@ -29,7 +30,7 @@ return new class extends Migration {
     public function down()
     {
         Schema::dropIfExists(
-            $this->getTablePrefix() .
+            $this->getTablePrefix().
             config('dashboard.ticket_messages.table_name', 'ticket_messages')
         );
     }

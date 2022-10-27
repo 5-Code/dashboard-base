@@ -24,8 +24,8 @@ class RequestClient
     public function getCurrentRequestIp()
     {
         $ipaddress = '';
-        if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-            $ipaddress = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+            $ipaddress = $_SERVER['HTTP_CF_CONNECTING_IP'];
         } else {
             if (isset($_SERVER['REMOTE_ADDR'])) {
                 $ipaddress = $_SERVER['REMOTE_ADDR'];
@@ -61,15 +61,15 @@ class RequestClient
                 }
             }
         }
+
         return $ipaddress;
     }
 
     public function getOs(): string
     {
-
         $user_agent = $this->getCurrentUserAgent();
-        $os_platform = "Unknown OS Platform";
-        $os_array = array(
+        $os_platform = 'Unknown OS Platform';
+        $os_array = [
             '/windows nt 10/i' => 'Windows 10',
             '/windows nt 6.3/i' => 'Windows 8.1',
             '/windows nt 6.2/i' => 'Windows 8',
@@ -93,13 +93,14 @@ class RequestClient
             '/android/i' => 'Android',
             '/blackberry/i' => 'BlackBerry',
             '/webos/i' => 'Mobile',
-        );
+        ];
 
         foreach ($os_array as $regex => $value) {
             if (preg_match($regex, $user_agent)) {
                 $os_platform = $value;
             }
         }
+
         return $os_platform;
     }
 
@@ -110,12 +111,11 @@ class RequestClient
 
     public function getCurrentBrowser(): string
     {
-
         $user_agent = $this->getCurrentUserAgent();
 
-        $browser = "Unknown Browser";
+        $browser = 'Unknown Browser';
 
-        $browser_array = array(
+        $browser_array = [
             '/msie/i' => 'Internet Explorer',
             '/Trident/i' => 'Internet Explorer',
             '/firefox/i' => 'Firefox',
@@ -128,19 +128,19 @@ class RequestClient
             '/knoqueror/i' => 'Konqueror',
             '/ubrowser/i' => 'UC Browser',
             '/mobile/i' => 'Safari Browser',
-        );
+        ];
 
         foreach ($browser_array as $regex => $value) {
             if (preg_match($regex, $user_agent)) {
                 $browser = $value;
             }
         }
+
         return $browser;
     }
 
     public function getCurrentDevice(): string
     {
-
         $tablet_browser = 0;
         $mobile_browser = 0;
 
@@ -155,14 +155,14 @@ class RequestClient
         }
 
         if ((isset($_SERVER['HTTP_ACCEPT']) && strpos(strtolower($_SERVER['HTTP_ACCEPT']),
-                    'application/vnd.wap.xhtml+xml') > 0) or
+            'application/vnd.wap.xhtml+xml') > 0) or
             ((isset($_SERVER['HTTP_X_WAP_PROFILE']) or
                 isset($_SERVER['HTTP_PROFILE'])))) {
             $mobile_browser++;
         }
 
         $mobile_ua = strtolower(substr($this->getCurrentUserAgent(), 0, 4));
-        $mobile_agents = array(
+        $mobile_agents = [
             'w3c',
             'acs-',
             'alav',
@@ -249,8 +249,8 @@ class RequestClient
             'winw',
             'winw',
             'xda',
-            'xda-'
-        );
+            'xda-',
+        ];
 
         if (in_array($mobile_ua, $mobile_agents)) {
             $mobile_browser++;
@@ -290,28 +290,29 @@ class RequestClient
     {
         try {
             $location = $this->locationByIp($ip);
-            $country = trans('countries.' . $location->countryCode);
+            $country = trans('countries.'.$location->countryCode);
+
             return [
                 'country' => $country,
-                'country_code' => $location->countryCode
+                'country_code' => $location->countryCode,
             ];
         } catch (Exception $e) {
         }
 
         return [
             'country' => trans('Unknown'),
-            'country_code' => "404"
+            'country_code' => '404',
         ];
-
     }
 
     /**
-     * @param string|null $ip
+     * @param  string|null  $ip
      * @return Position|bool
      */
     public function locationByIp(?string $ip = null): Position|bool
     {
         $ip = $ip ?? $this->request->ip();
+
         return Location::get($ip);
     }
 }

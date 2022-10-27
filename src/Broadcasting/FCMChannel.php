@@ -19,8 +19,8 @@ class FCMChannel
     }
 
     /**
-     * @param Authenticatable $notifiable
-     * @param Notification $notification
+     * @param  Authenticatable  $notifiable
+     * @param  Notification  $notification
      * @return array|null|void
      */
     public function send($notifiable, Notification $notification)
@@ -39,11 +39,11 @@ class FCMChannel
         $ignoreKeys = config('fcm.ignore', []);
 
         $data = array_filter(array_merge([
-            "registration_ids" => array_values(array_filter($to,
-                fn($v) => !in_array($v, $ignoreKeys) || strlen($v) > 100)),
-            "notification" => array_merge([
-                "title" => $message['title'] ?? config('app.name'),
-                "body" => $message['body'],
+            'registration_ids' => array_values(array_filter($to,
+                fn ($v) => ! in_array($v, $ignoreKeys) || strlen($v) > 100)),
+            'notification' => array_merge([
+                'title' => $message['title'] ?? config('app.name'),
+                'body' => $message['body'],
             ], $optionsNotification),
         ], $options));
 

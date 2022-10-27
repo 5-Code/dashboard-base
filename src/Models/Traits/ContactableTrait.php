@@ -10,5 +10,4 @@ trait ContactableTrait
     {
         return $this->morphMany(Contact::class, 'contactable');
     }
-
 }

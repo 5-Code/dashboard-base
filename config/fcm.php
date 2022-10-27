@@ -11,6 +11,6 @@ return [
     'ignore' => [
         'none',
         '_firebaseClient.notificationToken',
-        '32123132132'
+        '32123132132',
     ],
 ];

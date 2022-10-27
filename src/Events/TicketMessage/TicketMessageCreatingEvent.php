@@ -22,7 +22,6 @@ class TicketMessageCreatingEvent
     {
     }
 
-
     /**
      * Get the channels the event should broadcast on.
      *

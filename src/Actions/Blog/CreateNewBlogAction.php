@@ -11,7 +11,7 @@ use Habib\Dashboard\Models\Blog;
 class CreateNewBlogAction implements ActionInterface
 {
     /**
-     * @param array $data
+     * @param  array  $data
      * @return bool|Blog
      */
     public function handle(array $data)
@@ -26,12 +26,12 @@ class CreateNewBlogAction implements ActionInterface
 
             event(new BlogCreatingEvent($model));
 
-            if (!$model->save()) {
+            if (! $model->save()) {
                 return false;
             }
             $model->addMedia($data['image'])->toMediaCollection('blogs');
 
-            return $model->tap(fn($model) => event(new BlogCreatedEvent($model)));
+            return $model->tap(fn ($model) => event(new BlogCreatedEvent($model)));
         });
     }
 }

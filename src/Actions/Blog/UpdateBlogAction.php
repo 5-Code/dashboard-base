@@ -15,13 +15,12 @@ class UpdateBlogAction implements ActionInterface
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      * @return false|Blog
      */
     public function handle(array $data)
     {
         return DB::transaction(function () use ($data) {
-
             if (isset($data['image'])) {
                 $image = $this->model->upload($data['image'], 'blogs', [
                     'dir' => 'blogs',
@@ -31,16 +30,17 @@ class UpdateBlogAction implements ActionInterface
 
             $this->model->fill($data);
 
-            if (!$this->model->isDirty('title')) {
+            if (! $this->model->isDirty('title')) {
                 $this->model->sluggerByLocals($data, 'title', 'slug');
             }
 
             event(new BlogUpdatingEvent($this->model));
 
-            if (!$this->model->save()) {
+            if (! $this->model->save()) {
                 return false;
             }
-            return $this->model->tap(fn($model) => event(new BlogUpdatedEvent($model)));
+
+            return $this->model->tap(fn ($model) => event(new BlogUpdatedEvent($model)));
         });
     }
 }

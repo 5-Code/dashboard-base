@@ -3,8 +3,8 @@
 namespace Habib\Dashboard\Models;
 
 use Form;
-use Illuminate\Database\Eloquent\Builder;
 use Habib\Dashboard\Models\MainModel as  Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 
 class Setting extends Model
@@ -43,9 +43,11 @@ class Setting extends Model
     public function scopeSearch(Builder $query, $column, $like = false)
     {
         $value = request($column, null);
+
         return $query->when($value, function (Builder $builder) use ($value, $like, $column) {
             $mark = $like ? '%' : '';
-            return $builder->where($column, $like ? 'LIKE' : '=', $mark . $value . $mark);
+
+            return $builder->where($column, $like ? 'LIKE' : '=', $mark.$value.$mark);
         });
     }
 

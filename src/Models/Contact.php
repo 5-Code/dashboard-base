@@ -16,7 +16,6 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Contact extends Model implements HasMedia
 {
-
     use InteractsWithMedia;
 
     protected $fillable = [

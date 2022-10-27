@@ -13,12 +13,12 @@ class UpdateFaqAction implements ActionInterface
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      * @return false|Faq
      */
     public function handle(array $data)
     {
-        if (!$this->model->fill($data)->isDirty('title')) {
+        if (! $this->model->fill($data)->isDirty('title')) {
             $slug = [];
             foreach (locals() as $local) {
                 $slug[$local] = Slugger::new()->slug($this->model, "slug->{$local}", $data['title'][$local]);
@@ -26,7 +26,7 @@ class UpdateFaqAction implements ActionInterface
             $this->model->setAttribute('slug', $slug);
         }
 
-        if (!$this->model->save()) {
+        if (! $this->model->save()) {
             return false;
         }
 

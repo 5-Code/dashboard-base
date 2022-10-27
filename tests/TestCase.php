@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase as BaseTest;
 
 class TestCase extends BaseTest
 {
-
     protected function setUp(): void
     {
         $this->emptyTempDirectory();
@@ -14,7 +13,7 @@ class TestCase extends BaseTest
 
     protected function emptyTempDirectory()
     {
-        $tempDirPath = __DIR__ . '/temp';
+        $tempDirPath = __DIR__.'/temp';
 
         $files = scandir($tempDirPath);
 
@@ -24,5 +23,4 @@ class TestCase extends BaseTest
             }
         }
     }
-
 }

@@ -109,14 +109,13 @@ class FileInfo implements Arrayable
         return $this->visibility;
     }
 
-
     /**
      * @return Image
      */
     public function image(): Image
     {
         $file = new File(
-            Storage::disk($this->getDisk())->path($this->getPath() . DIRECTORY_SEPARATOR . $this->getName())
+            Storage::disk($this->getDisk())->path($this->getPath().DIRECTORY_SEPARATOR.$this->getName())
         );
 
         return (new ImageManager('imagick'))->make($file);

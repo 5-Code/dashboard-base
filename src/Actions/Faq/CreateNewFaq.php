@@ -18,7 +18,7 @@ class CreateNewFaq implements ActionInterface
             $slug[$local] = Slugger::new()->slug($model, "slug->{$local}", $data['title'][$local]);
         }
 
-        if (!$model->setAttribute('slug', $slug)->save()) {
+        if (! $model->setAttribute('slug', $slug)->save()) {
             return false;
         }
 

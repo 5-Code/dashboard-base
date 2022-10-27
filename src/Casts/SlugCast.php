@@ -13,23 +13,24 @@ class SlugCast implements CastsAttributes
     }
 
     /**
-     * @param Model $model
-     * @param string $key
-     * @param string $value
-     * @param array $attributes
+     * @param  Model  $model
+     * @param  string  $key
+     * @param  string  $value
+     * @param  array  $attributes
      * @return string
      */
     public function get($model, $key, $value, $attributes)
     {
         $value = str($value);
+
         return $value->isJson() ? json_decode($value, true) : $value;
     }
 
     /**
-     * @param Model $model
-     * @param string $key
-     * @param array $value
-     * @param array $attributes
+     * @param  Model  $model
+     * @param  string  $key
+     * @param  array  $value
+     * @param  array  $attributes
      * @return string
      */
     public function set($model, $key, $value, $attributes)
@@ -61,6 +62,7 @@ class SlugCast implements CastsAttributes
             $slug = "$value-$i";
             $i++;
         }
+
         return $slug;
     }
 

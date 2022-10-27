@@ -22,19 +22,19 @@ class UploadService implements UploadServiceContract
      * @param $path
      * @param $width
      * @param $height
-     * @param string $type
+     * @param  string  $type
      * @return string
      */
-    public static function thumb($path, $width = null, $height = null, string $type = "fit"): string
+    public static function thumb($path, $width = null, $height = null, string $type = 'fit'): string
     {
         //relative directory path starting from main directory of images
-        $dir_path = (dirname($path) == '.') ? "" : dirname($path);
+        $dir_path = (dirname($path) == '.') ? '' : dirname($path);
         $thumb_images_path = config('dashboard.thumb_images_path', 'thumbs');
         $images_path = config('dashboard.images_path', '');
-        $path = ltrim($path, "/");
+        $path = ltrim($path, '/');
 
         //if path exists and is image
-        if (!File::exists(public_path("{$images_path}/" . $path))) {
+        if (! File::exists(public_path("{$images_path}/".$path))) {
             $width = is_null($width) ? 400 : $width;
             $height = is_null($height) ? 400 : $height;
 
@@ -43,9 +43,9 @@ class UploadService implements UploadServiceContract
         }
 
         $allowedMimeTypes = ['image/jpeg', 'image/gif', 'image/png'];
-        $contentType = mime_content_type(public_path("{$images_path}/" . $path));
+        $contentType = mime_content_type(public_path("{$images_path}/".$path));
 
-        if (!in_array($contentType, $allowedMimeTypes)) {
+        if (! in_array($contentType, $allowedMimeTypes)) {
             $width = is_null($width) ? 400 : $width;
             $height = is_null($height) ? 400 : $height;
 
@@ -55,16 +55,15 @@ class UploadService implements UploadServiceContract
 
         //returns the original image if no width and height
         if (is_null($width) && is_null($height)) {
-            return "{$images_path}/" . $path;
+            return "{$images_path}/".$path;
         }
 
         //if thumbnail exist returns it
-        if (File::exists(public_path("{$images_path}/$thumb_images_path/" . "{$width}x{$height}_{$type}/" . $path))) {
-            return "{$images_path}/$thumb_images_path/" . "{$width}x{$height}_{$type}/" . $path;
+        if (File::exists(public_path("{$images_path}/$thumb_images_path/"."{$width}x{$height}_{$type}/".$path))) {
+            return "{$images_path}/$thumb_images_path/"."{$width}x{$height}_{$type}/".$path;
         }
 
-
-        $image = Image::make(public_path("{$images_path}/" . $path));
+        $image = Image::make(public_path("{$images_path}/".$path));
 
         match ($type) {
             'fit' => $image->fit($width, $height),
@@ -89,28 +88,27 @@ class UploadService implements UploadServiceContract
             'jpg' => $image->fit($width, $height)->encode('jpg'),
         };
 
-
         //Create the directory if it doesn't exist
-        if (!File::exists(
-            public_path("$images_path/$thumb_images_path/{$width}x{$height}_{$type}/" . $dir_path))) {
+        if (! File::exists(
+            public_path("$images_path/$thumb_images_path/{$width}x{$height}_{$type}/".$dir_path))) {
             File::makeDirectory(
-                public_path("$images_path/$thumb_images_path/{$width}x{$height}_{$type}/" . $dir_path),
+                public_path("$images_path/$thumb_images_path/{$width}x{$height}_{$type}/".$dir_path),
                 0775,
                 true
             );
         }
 
         //Save the thumbnail
-        $image->save(public_path("{$images_path}/$thumb_images_path/" . "{$width}x{$height}_{$type}/" . $path));
+        $image->save(public_path("{$images_path}/$thumb_images_path/"."{$width}x{$height}_{$type}/".$path));
 
         //return the url of the thumbnail
-        return "{$images_path}/$thumb_images_path/" . "{$width}x{$height}_{$type}/" . $path;
+        return "{$images_path}/$thumb_images_path/"."{$width}x{$height}_{$type}/".$path;
     }
 
     /**
-     * @param UploadedFile $file
-     * @param string|null $collection
-     * @param array $options
+     * @param  UploadedFile  $file
+     * @param  string|null  $collection
+     * @param  array  $options
      * @return FileInfo
      */
     public function avatar(
@@ -128,9 +126,9 @@ class UploadService implements UploadServiceContract
     }
 
     /**
-     * @param UploadedFile $file
-     * @param string|null $collection
-     * @param array $options
+     * @param  UploadedFile  $file
+     * @param  string|null  $collection
+     * @param  array  $options
      * @return FileInfo
      */
     public function upload(
@@ -165,9 +163,9 @@ class UploadService implements UploadServiceContract
     }
 
     /**
-     * @param array $files
-     * @param string|null $collection
-     * @param array $options
+     * @param  array  $files
+     * @param  string|null  $collection
+     * @param  array  $options
      * @return array
      */
     public function multiUpload(array $files, null|string $collection = null, array $options = []): array
@@ -186,9 +184,9 @@ class UploadService implements UploadServiceContract
     }
 
     /**
-     * @param string $keyName
-     * @param string|null $collection
-     * @param array $options
+     * @param  string  $keyName
+     * @param  string|null  $collection
+     * @param  array  $options
      * @return FileInfo
      */
     public function uploadFormRequest(
@@ -200,9 +198,9 @@ class UploadService implements UploadServiceContract
     }
 
     /**
-     * @param string $file
-     * @param string|null $collection
-     * @param array $options
+     * @param  string  $file
+     * @param  string|null  $collection
+     * @param  array  $options
      * @return FileInfo
      */
     public function uploadBase64(
@@ -220,16 +218,15 @@ class UploadService implements UploadServiceContract
     //resizeCanvas - keep only center
 
     /**
-     * @param string $file
+     * @param  string  $file
      * @return UploadedFile
      */
     public function base64ToFile(string $file): UploadedFile
     {
-
         $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $file));
 
         // save it to temporary dir first.
-        $tmpFilePath = sys_get_temp_dir() . '/' . Str::uuid()->toString();
+        $tmpFilePath = sys_get_temp_dir().'/'.Str::uuid()->toString();
         file_put_contents($tmpFilePath, $fileData);
 
         // this just to help us get file info.
@@ -245,17 +242,16 @@ class UploadService implements UploadServiceContract
     }
 
     /**
-     * @param FileInfo $fileInfo
+     * @param  FileInfo  $fileInfo
      * @return Image
      */
     public function toWebp(FileInfo $fileInfo): Image
     {
         return $fileInfo->image()
             ->encode('webp')
-            ->save($fileInfo->getPath() . DIRECTORY_SEPARATOR . 'webp' . DIRECTORY_SEPARATOR . $fileInfo->getName(), 85,
+            ->save($fileInfo->getPath().DIRECTORY_SEPARATOR.'webp'.DIRECTORY_SEPARATOR.$fileInfo->getName(), 85,
                 'webp'
             );
-
     }
 //    /**
 //     * @param array $options

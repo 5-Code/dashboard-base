@@ -8,8 +8,8 @@ use Habib\Dashboard\Events\TicketMessage\TicketMessageDeletedEvent;
 use Habib\Dashboard\Events\TicketMessage\TicketMessageDeletingEvent;
 use Habib\Dashboard\Events\TicketMessage\TicketMessageUpdatedEvent;
 use Habib\Dashboard\Events\TicketMessage\TicketMessageUpdatingEvent;
-use Habib\Dashboard\Models\Traits\HasOwner;
 use Habib\Dashboard\Models\MainModel as  Model;
+use Habib\Dashboard\Models\Traits\HasOwner;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,6 +21,7 @@ class TicketMessage extends Model implements HasMedia
     use HasOwner;
     use SoftDeletes;
     use InteractsWithMedia;
+
     protected $fillable = [
         'message',
         'owner_id',
@@ -52,6 +53,4 @@ class TicketMessage extends Model implements HasMedia
     {
         return $this->belongsTo(Ticket::class);
     }
-
-
 }

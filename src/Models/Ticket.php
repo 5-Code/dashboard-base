@@ -9,9 +9,9 @@ use Habib\Dashboard\Events\Ticket\TicketDeletedEvent;
 use Habib\Dashboard\Events\Ticket\TicketDeletingEvent;
 use Habib\Dashboard\Events\Ticket\TicketUpdatedEvent;
 use Habib\Dashboard\Events\Ticket\TicketUpdatingEvent;
+use Habib\Dashboard\Models\MainModel as  Model;
 use Habib\Dashboard\Models\Traits\HasOwner;
 use Habib\Dashboard\Models\Traits\HasSlug;
-use Habib\Dashboard\Models\MainModel as  Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -55,5 +55,4 @@ class Ticket extends Model implements HasMedia
     {
         return $this->morphTo();
     }
-
 }

@@ -10,21 +10,22 @@ use Illuminate\Support\Collection;
 class ApiResponse
 {
     /**
-     * @param string $message
-     * @param array $error
-     * @param int $code
+     * @param  string  $message
+     * @param  array  $error
+     * @param  int  $code
      * @return JsonResponse
      */
     public static function error(string $message, array $error = [], int $code = 400): JsonResponse
     {
         $status = false;
+
         return response()->json(compact('message', 'error', 'status'), $code);
     }
 
     /**
-     * @param string $message
-     * @param array|JsonResponse|JsonResource|Collection|Model $data
-     * @param int $code
+     * @param  string  $message
+     * @param  array|JsonResponse|JsonResource|Collection|Model  $data
+     * @param  int  $code
      * @return JsonResponse|JsonResource
      */
     public static function success(
@@ -36,11 +37,12 @@ class ApiResponse
         if ($data instanceof JsonResource) {
             return $data;
         }
+
         return response()->json(compact('message', 'data', 'status'), $code);
     }
 
     /**
-     * @param string|null $message
+     * @param  string|null  $message
      * @return JsonResponse
      */
     public static function notFound(?string $message = null): JsonResponse
