@@ -84,8 +84,17 @@ abstract class BaseRepository implements BaseRepositoryInterface
             }
         }
 
+        $selection = $this->getRequest()->get('select', ['*']);
+        if (is_string($selection)) {
+            $selection = explode(',', $selection);
+        }
+        $prefix = $this->getModel()->getTable() . '.';
         return $query->with($this->getWith())
-            ->orderBy($this->request->get('order_by', 'id'), $this->request->get('order_direction', 'desc'));
+            ->select(array_map(fn($v) => $prefix . $v, $selection))
+            ->orderBy(
+                $this->request->get('order_by', 'id'),
+                $this->request->get('order_direction', 'desc')
+            );
     }
 
     /**
@@ -125,10 +134,12 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     /**
      * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getWith(): array
     {
-        return $this->with;
+        return $this->getRequest()->get('with', $this->with ?? []);
     }
 
     /**
@@ -272,7 +283,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
                 return false;
             }
 
-            return tap($saved,fn($model) => $this->attach($saved, $data));
+            return tap($saved, fn($model) => $this->attach($saved, $data));
         });
     }
 
@@ -298,7 +309,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
                 return false;
             }
 
-            return tap($model,fn($model) => $this->attach($model, $data));
+            return tap($model, fn($model) => $this->attach($model, $data));
         });
     }
 
