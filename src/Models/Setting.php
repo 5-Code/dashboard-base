@@ -36,7 +36,7 @@ class Setting extends Model
         parent::boot();
         static::creating(callback: function (self $model) {
             $model->locale ??= app()->getLocale();
-            $model?->type ??= 'string';
+            $model->type ??= 'string';
         });
     }
 
