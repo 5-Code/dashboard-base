@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Setting;
+use Habib\Dashboard\Models\Setting;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;

@@ -77,7 +77,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
                 $name = end($param);
                 $relation = implode('.', array_slice($param, 0, -1));
 
-                $query->whereHas($relation, fn($q) => $this->filter($q, $value, $name, $operator));
+                $query->whereHas($relation, fn($q) => $this->filter($q, $value, "$relation.$name", $operator));
             } else {
                 $name = "{$this->getModel()->getTable()}.{$name}";
                 $this->filter($query, $value, $name, $operator);
