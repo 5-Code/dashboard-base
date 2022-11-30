@@ -68,7 +68,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
             $alias = $filter[2] ?? $name;
             $value = $this->getRequest()->get($alias);
             $operator = $this->getRequest()->get(str_replace('.', '_', $alias) . '_op', $filter[1] ?? '=');
-            if (is_null($value) && !in_array($operator, ['nullable', 'notNullable'])) {
+            if (is_null($value) && !in_array($operator, ['nullable', 'notNullable']) && $this->getRequest()->has($alias)) {
                 continue;
             }
 
